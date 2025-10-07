@@ -1,10 +1,10 @@
 # 🎮 Arkanoid – Phiên bản JavaFX
 
 ## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-- **Lê Quốc Triệu (24022750)** – GameObject + Paddle
-- **Lê Tuấn Dũng  (24022630)** – Ball + Brick
-- **Nguyễn Thạc Quang Huy  (24022662)** – Items + Main
-- **Trương Thị Kim Ánh  (24022614)** – GameManager + GameCanvas
+- **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick
+- **Lê Tuấn Dũng  (24022630)** – Ball + GameManager
+- **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
+- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas
 
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
