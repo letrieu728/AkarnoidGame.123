@@ -1,4 +1,4 @@
-package game
+package org.example.akarnoidgamefx;
 
 import java.util.ArrayList;
 import java.util.List;
