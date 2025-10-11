@@ -27,4 +27,14 @@ public class Ball extends MovableObject {
             gc.fillOval(x, y, width, height);
         }
     }
+    public double getSize() { return width; }
+    public double getBaseSpeed() { return baseSpeed; }
+    public void setBaseSpeed(double baseSpeed) { this.baseSpeed = baseSpeed; }
+    public void setPosition(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    
 }
+
+
