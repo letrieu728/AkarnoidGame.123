@@ -1,57 +1,110 @@
-# AkarnoidGame.123
-
-## 📌 Giới thiệu
-Đây là dự án game **Arkanoid** (game đập gạch) viết bằng **Java Swing** theo hướng đối tượng (OOP).  
-Trò chơi được mở rộng so với bản gốc với nhiều **tính năng sáng tạo** do nhóm xây dựng.  
-
----
+# 🎮 Arkanoid – Phiên bản JavaFX
 
 ## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-- **Lê Quốc Triệu (24022750)** – Game Panel + Bullet
-- **Lê Tuấn Dũng  (24022630)** – Phát triển Ball +  va chạm
-- **Nguyễn Thạc Quang Huy  (24022662)** – Xây dựng Paddle + Input
-- **Trương Thị Kim Ánh  (24022614)** – Xây dựng brick  + item
+- **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick
+- **Lê Tuấn Dũng  (24022630)** – Ball + GameManager
+- **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
+- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas
+
+## 🧠 Mục tiêu
+Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
+
+---
+
+## ⚙️ Công nghệ sử dụng
+- **Ngôn ngữ:** Java 25
+- **Thư viện GUI:** JavaFX
+- **IDE:** IntelliJ IDEA
+- **Ảnh game:** PNG nền trong suốt (paddle, ball, brick)
+
+---
+
+## 📁 Cấu trúc thư mục hiện tại
+```
+ArkanoidGame/
+ ├── src/
+ │    └── game/
+ │         ├── Main.java
+ │         ├── GameCanvas.java
+ │         ├── GameObject.java
+ │         ├── MovableObject.java
+ │         ├── Paddle.java
+ │         ├── Ball.java
+ │         └── Brick.java
+ └── resources/
+      └── images/
+           ├── paddle.png
+           ├── ball.png
+           └── brick.png
+```
+
+---
+
+## 💡 Mô tả các lớp chính
+| Class | Vai trò | Kế thừa từ | Ghi chú |
+|-------|----------|------------|----------|
+| `GameObject` | Lớp cha trừu tượng cho tất cả vật thể trong game | — | Quản lý toạ độ, kích thước, ảnh |
+| `MovableObject` | Lớp cha cho các vật thể di chuyển được | `GameObject` | Thêm vận tốc `dx`, `dy` |
+| `Ball` | Quả bóng di chuyển, va chạm | `MovableObject` | Có ảnh `ball.png` |
+| `Paddle` | Thanh trượt điều khiển | `GameObject` | Có ảnh `paddle.png` |
+| `Brick` | Gạch tĩnh để phá | `GameObject` | Có ảnh `brick.png` |
+| `GameCanvas` | Canvas chính để vẽ toàn cảnh | — | Render toàn bộ vật thể |
+| `Main` | Điểm bắt đầu chương trình | — | Khởi tạo JavaFX Stage và Scene |
+
+---
+## 🧠 Cấu trúc kế thừa (UML mô tả)
+```
+        +----------------+
+        |  GameObject    |
+        +----------------+
+        | x, y, width... |
+        | img: Image     |
+        +----------------+
+        | render()       |
+        | update()       |
+        +----------------+
+                ▲
+                |
+         +----------------+
+         | MovableObject  |
+         +----------------+
+         | dx, dy         |
+         | move()         |
+         +----------------+
+           ▲        ▲
+           |        |
+  +---------+    +-----------+
+  |  Ball   |    |  Paddle   |
+  +---------+    +-----------+
+                  ▲
+                  |
+             +-----------+
+             |  Brick    |
+             +-----------+
+```
+
+## 🎨 Hiển thị hiện tại (Tuần 5)
+- Render **nền đen**
+- 3 hàng **gạch cam**
+- **Paddle xanh** ở dưới
+- **Bóng đỏ** ở giữa
+
+---
+
+## ▶️ Cách chạy chương trình
+1. Vào IntelliJ → **Run → Edit Configurations...**
+2. Thêm dòng sau vào ô **VM Options** (thay đường dẫn bằng SDK JavaFX của bạn):
+   ```
+   --module-path "C:\javafx-sdk-25\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics
+   ```
+3. Chạy file `Main.java`
+4. Cửa sổ “Arkanoid - JavaFX Render with Images” xuất hiện 🎮
 
 ---
 
 
----
 
-## 🚀 Cách chạy
-1. Mở project trong **IntelliJ IDEA** hoặc IDE Java bất kỳ.  
-2. Đảm bảo đã cài **JDK 17+**.  
-3. Đặt thư mục `resources` thành **Resources Root** trong IntelliJ.  
-4. Chạy `Main.java`.  
-
----
-
-## 🎮 Gameplay
-Người chơi điều khiển paddle để đỡ bóng và phá vỡ gạch.  
-Trong quá trình chơi có nhiều **hiệu ứng đặc biệt**:  
-
-### 🧩 Item (Power-ups / Power-downs)
-- **⭐ Nhân đôi điểm (x2 Score)** → khi hứng vào, toàn bộ điểm số hiện tại được nhân đôi.  
-- **❌ Trừ điểm (- Score)** → bị trừ một lượng điểm cố định.  
-- **⚪ Nhân đôi bóng (Double Ball)** → mỗi bóng hiện tại sinh ra thêm một bóng mới.  
-- **🔫 Súng (Laser)** → paddle có thể bắn đạn trong **5 giây**.  
-
-### 🔫 Bullet
-- Khi paddle đang trong trạng thái **Laser**, người chơi có thể nhấn **Space** để bắn đạn.  
-- Đạn bay thẳng lên, nếu trúng gạch → gạch sẽ bị phá hủy.  
-
----
-
-## 🛠 Công nghệ sử dụng
-- **Java SE**  
-- **Java Swing (JPanel, JFrame)** để vẽ và render game.  
-- **ImageIO** để load ảnh PNG từ thư mục `resources/assets/`.  
-- **OOP** (tách class riêng cho Ball, Paddle, Brick, Item, Bullet).  
-
----
-
-## 🌟 Điểm sáng tạo
-- Hệ thống **Item đa dạng** (x2 điểm, trừ điểm, nhân đôi bóng, laser).  
-- Paddle có thể **bắn đạn trong thời gian hữu hạn**.  
-- Dễ mở rộng thêm hiệu ứng hoặc chế độ chơi khác.  
-
----
+## 🏁 Kế hoạch phát triển tuần sau
+- 🕹️ Thêm di chuyển Paddle bằng phím ← →
+- 🧱 Thêm va chạm bóng–gạch
+- 🌟 Thêm Item rơi (x2 điểm, bắn đạn, nhân đôi bóng)
