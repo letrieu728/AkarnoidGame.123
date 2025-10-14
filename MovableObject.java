@@ -2,7 +2,6 @@ package game;
 
 /**
  * Lớp trung gian cho các đối tượng có thể di chuyển
- * (ví dụ: Ball, Paddle, Item).
  *
  * Kế thừa từ GameObject và bổ sung thuộc tính vận tốc (dx, dy),
  * giúp các lớp con dễ dàng điều khiển chuyển động.
@@ -14,12 +13,6 @@ public abstract class MovableObject extends GameObject {
 
     /**
      * Khởi tạo đối tượng di chuyển.
-     *
-     * @param x          tọa độ X ban đầu
-     * @param y          tọa độ Y ban đầu
-     * @param width      chiều rộng
-     * @param height     chiều cao
-     * @param imagePath  đường dẫn ảnh (có thể null)
      */
     public MovableObject(double x, double y, double width, double height, String imagePath) {
         super(x, y, width, height, imagePath);
@@ -56,9 +49,6 @@ public abstract class MovableObject extends GameObject {
 
     /**
      * Đặt vận tốc đồng thời trên 2 trục.
-     *
-     * @param dx vận tốc theo trục X
-     * @param dy vận tốc theo trục Y
      */
     public void setVelocity(double dx, double dy) {
         this.dx = dx;
@@ -81,3 +71,4 @@ public abstract class MovableObject extends GameObject {
         this.dy = 0;
     }
 }
+
