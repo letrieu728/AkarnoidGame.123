@@ -1,4 +1,4 @@
-package org.example.akarnoidgamefx;
+package game;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -200,3 +200,4 @@ public class Ball extends MovableObject {
         this.y = y;
     }
 }
+
