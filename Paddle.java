@@ -1,4 +1,4 @@
-package org.example.akarnoidgamefx;
+package game;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
