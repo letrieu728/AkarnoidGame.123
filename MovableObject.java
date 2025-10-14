@@ -1,29 +1,83 @@
 package game;
 
-import javafx.scene.canvas.GraphicsContext;
-
+/**
+ * Lớp trung gian cho các đối tượng có thể di chuyển
+ * (ví dụ: Ball, Paddle, Item).
+ *
+ * Kế thừa từ GameObject và bổ sung thuộc tính vận tốc (dx, dy),
+ * giúp các lớp con dễ dàng điều khiển chuyển động.
+ */
 public abstract class MovableObject extends GameObject {
-    protected double dx, dy;
+    // Thành phần vận tốc theo trục X và Y
+    protected double dx;
+    protected double dy;
 
+    /**
+     * Khởi tạo đối tượng di chuyển.
+     *
+     * @param x          tọa độ X ban đầu
+     * @param y          tọa độ Y ban đầu
+     * @param width      chiều rộng
+     * @param height     chiều cao
+     * @param imagePath  đường dẫn ảnh (có thể null)
+     */
     public MovableObject(double x, double y, double width, double height, String imagePath) {
         super(x, y, width, height, imagePath);
         this.dx = 0;
         this.dy = 0;
     }
 
+    /**
+     * Phương thức di chuyển cơ bản:
+     * cộng vận tốc vào vị trí hiện tại.
+     */
     public void move() {
-        x += dx;
-        y += dy;
+        this.x += dx;
+        this.y += dy;
     }
 
-    public void clamp(double screenWidth) {
-        if (x < 0) x = 0;
-        if (x + width > screenWidth) x = screenWidth - width;
+    // ======== Getter & Setter ========
+
+    public double getDx() {
+        return dx;
     }
 
-    @Override
-    public abstract void update();
+    public void setDx(double dx) {
+        this.dx = dx;
+    }
 
-    @Override
-    public abstract void render(GraphicsContext gc);
+    public double getDy() {
+        return dy;
+    }
+
+    public void setDy(double dy) {
+        this.dy = dy;
+    }
+
+    /**
+     * Đặt vận tốc đồng thời trên 2 trục.
+     *
+     * @param dx vận tốc theo trục X
+     * @param dy vận tốc theo trục Y
+     */
+    public void setVelocity(double dx, double dy) {
+        this.dx = dx;
+        this.dy = dy;
+    }
+
+    /**
+     * Kiểm tra xem đối tượng có đang đứng yên không.
+     * @return true nếu dx = dy = 0
+     */
+    public boolean isStationary() {
+        return dx == 0 && dy == 0;
+    }
+
+    /**
+     * Dừng chuyển động ngay lập tức.
+     */
+    public void stopMovement() {
+        this.dx = 0;
+        this.dy = 0;
+    }
 }
