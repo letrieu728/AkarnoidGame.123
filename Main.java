@@ -1,4 +1,4 @@
-package org.example.akarnoidgamefx;
+package game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
