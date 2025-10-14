@@ -1,4 +1,4 @@
-package org.example.akarnoidgamefx;
+package game;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
