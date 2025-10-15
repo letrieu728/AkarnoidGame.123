@@ -1,146 +1,96 @@
-package game;
+package org.example.akarnoidgame;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameCanvas extends Canvas {
-    private GraphicsContext gc;
-    private Paddle paddle;
-    private Ball ball;
-    private List<Brick> bricks;
-    private boolean leftPressed = false;
-    private boolean rightPressed = false;
-
-    private AnimationTimer gameLoop;
-    private double screenWidth;
-    private double screenHeight;
+/**
+ * Lớp GameCanvas chịu trách nhiệm cập nhật và vẽ game Arkanoid.
+ */
+public class GameCanvas extends Pane {
+    private final Canvas canvas;
+    private final GraphicsContext gc;
+    private final Paddle paddle;
+    private final Ball ball;
+    private final List<Brick> bricks = new ArrayList<>();
+    private final Image background;
 
     public GameCanvas(double width, double height) {
-        super(width, height);
-        this.gc = getGraphicsContext2D();
-        this.screenWidth = width;
-        this.screenHeight = height;
+        canvas = new Canvas(width, height);
+        gc = canvas.getGraphicsContext2D();
+        getChildren().add(canvas);
 
-        setupGame();
-        setupInput();
-        startGameLoop();
-    }
+        // Load nền
+        background = new Image(getClass().getResource("/image/background.png").toExternalForm());
 
-    private void setupGame() {
-        paddle = new Paddle(screenWidth / 2 - 50, screenHeight - 50, 100, 20, screenWidth);
-        ball = new Ball(screenWidth / 2, screenHeight / 2, 15);
-        bricks = new ArrayList<>();
+        // Tạo paddle, ball, brick
+        paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width,
+                getClass().getResource("/image/paddle.png").toExternalForm());
+        ball = new Ball(width / 2, height / 2, 25, width, height,
+                getClass().getResource("/image/ball.png").toExternalForm());
 
-        // Tạo lưới gạch (5 hàng, 10 cột)
-        int rows = 5, cols = 10;
-        double brickWidth = screenWidth / cols;
-        double brickHeight = 25;
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                bricks.add(new Brick(c * brickWidth, r * brickHeight + 50, brickWidth - 5, brickHeight - 5));
+        int rows = 3;
+        int cols = 6; // ✅ thêm số cột
+        double brickWidth = 100;
+        double brickHeight = 35;
+        double startX = 80;
+        double startY = 80;
+        double gapX = 20;  // khoảng cách ngang giữa các brick
+        double gapY = 15;  // khoảng cách dọc giữa các hàng
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                double x = startX + col * (brickWidth + gapX);
+                double y = startY + row * (brickHeight + gapY);
+                bricks.add(new Brick(x, y, brickWidth, brickHeight,
+                        getClass().getResource("/image/brick.png").toExternalForm()));
             }
         }
 
-        ball.deactivate();
-        ball.resetPosition(paddle.getX(), paddle.getY(), paddle.getWidth());
-    }
-
-    private void setupInput() {
+        // ✅ Điều khiển bằng phím
+        setOnKeyPressed(e -> paddle.handleKeyPress(e.getCode()));
+        setOnKeyReleased(e -> paddle.handleKeyRelease(e.getCode()));
         setFocusTraversable(true);
 
-        // --- Bắt phím ---
-        setOnKeyPressed((KeyEvent e) -> {
-            KeyCode code = e.getCode();
-            switch (code) {
-                case LEFT -> leftPressed = true;
-                case RIGHT -> rightPressed = true;
-                case SPACE -> ball.activate();
-            }
-        });
-
-        setOnKeyReleased((KeyEvent e) -> {
-            if (e.getCode() == KeyCode.LEFT) leftPressed = false;
-            if (e.getCode() == KeyCode.RIGHT) rightPressed = false;
-        });
-
-        // --- Bắt chuột ---
-        setOnMouseClicked((MouseEvent e) -> {
-            if (!ball.isActive()) ball.activate();
-        });
-    }
-
-    private void startGameLoop() {
-        gameLoop = new AnimationTimer() {
+        // ✅ Game loop
+        new AnimationTimer() {
             @Override
             public void handle(long now) {
                 update();
                 render();
             }
-        };
-        gameLoop.start();
+        }.start();
     }
 
     private void update() {
-        // Paddle movement
-        if (leftPressed) paddle.moveLeft();
-        else if (rightPressed) paddle.moveRight();
-        else paddle.stop();
-
         paddle.update();
         ball.update();
 
-        if (!ball.isActive()) {
-            ball.resetPosition(paddle.getX(), paddle.getY(), paddle.getWidth());
+        // Va chạm paddle
+        if (ball.intersects(paddle)) {
+            ball.bounce();
+            ball.setY(paddle.getY() - ball.getHeight());
         }
 
-        // Collision with walls
-        ball.handleWallCollision(screenWidth, screenHeight);
-
-        // Collision with paddle
-        if (ball.collidesWith(paddle)) {
-            double hitPos = paddle.getHitPosition(ball.getX() + ball.getWidth() / 2);
-            ball.bounceFromPaddle(hitPos);
-        }
-
-        // Collision with bricks
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed() && ball.intersects(brick)) {
-                ball.handleBrickCollision(brick);
-                brick.hit();
+        // Va chạm brick
+        for (Brick b : bricks) {
+            if (b.isVisible() && ball.intersects(b)) {
+                b.setVisible(false);
+                ball.bounce();
+                break;
             }
-        }
-
-        // Check lose condition
-        if (ball.getY() > screenHeight) {
-            ball.deactivate();
-            ball.resetPosition(paddle.getX(), paddle.getY(), paddle.getWidth());
         }
     }
 
     private void render() {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, screenWidth, screenHeight);
-
-        // Draw paddle
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
         paddle.render(gc);
-
-        // Draw ball
         ball.render(gc);
-
-        // Draw bricks
-        for (Brick brick : bricks) {
-            brick.render(gc);
-        }
-
-        // Instruction
-        gc.setFill(Color.WHITE);
-        gc.fillText("Press SPACE to start", 10, screenHeight - 10);
+        for (Brick b : bricks) b.render(gc);
     }
 }
