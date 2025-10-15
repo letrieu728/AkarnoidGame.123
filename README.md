@@ -186,11 +186,7 @@ ArkanoidGame/
 
 
 
-## 🎨 Hiển thị hiện tại (Tuần 5)
-- Render **nền đen**
-- 3 hàng **gạch cam**
-- **Paddle xanh** ở dưới
-- **Bóng đỏ** ở giữa
+
 
 ---
 
