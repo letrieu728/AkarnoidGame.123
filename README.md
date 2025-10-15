@@ -25,16 +25,25 @@ ArkanoidGame/
  ├── src/
  │    └── game/
  │         ├── Main.java
+ │         ├── GameManager.java
  │         ├── GameCanvas.java
  │         ├── GameObject.java
  │         ├── MovableObject.java
  │         ├── Paddle.java
  │         ├── Ball.java
+ │         ├── ItemsItems.java
  │         └── Brick.java
  └── resources/
       └── images/
            ├── paddle.png
            ├── ball.png
+           ├── background.png
+           ├── x2ball.png
+           ├── x2score.png
+           ├── trudiem.png
+           ├── heart.png
+           ├── laser.png
+           ├── bullet.png
            └── brick.png
 ```
 
