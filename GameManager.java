@@ -19,7 +19,7 @@ public class GameManager {
     private void initGame() {
         gameCanvas = new GameCanvas(900, 600);
         gameScene = new Scene(gameCanvas);
-        stage.setTitle("Arkanoid - Week 6");
+        stage.setTitle("Arkanoid - Week 7");
         stage.setScene(gameScene);
         stage.show();
         gameCanvas.requestFocus();
