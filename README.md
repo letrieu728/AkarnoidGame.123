@@ -4,7 +4,7 @@
 - **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick
 - **Lê Tuấn Dũng  (24022630)** – Ball + GameManager + Bullet
 - **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
-- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas
+- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas ( có thể code chung )
 
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
@@ -31,7 +31,8 @@ ArkanoidGame/
  │         ├── MovableObject.java
  │         ├── Paddle.java
  │         ├── Ball.java
- │         ├── ItemsItems.java
+ │         ├── PowerUp.java
+ │         ├── Item.java
  │         └── Brick.java
  └── resources/
       └── images/
@@ -44,6 +45,8 @@ ArkanoidGame/
            ├── heart.png
            ├── laser.png
            ├── bullet.png
+           ├── brick1.png
+           ├── brick2.png
            └── brick.png
 ```
 
