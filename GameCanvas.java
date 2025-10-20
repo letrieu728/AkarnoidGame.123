@@ -17,16 +17,12 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameCanvas extends Pane {
-    /**
-     * Enum to manage game states.
-     */
+    
     private enum GameState {
         MENU, PLAYING, GAMEOVER, YOUWIN
     }
 
-    /**
-     * NEW Enum to manage game modes.
-     */
+   
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
@@ -41,13 +37,12 @@ public class GameCanvas extends Pane {
     private final Image background;
 
     private GameState gameState = GameState.MENU;
-    private GameMode selectedGameMode; // NEW variable to store the selected game mode
+    private GameMode selectedGameMode;
     private int score = 0;
     private int lives = 5;
     private final Random random = new Random();
     private final double initialBallSpeed = 5;
 
-    // --- NEW VARIABLE: Stores the last speed in Speed Run mode ---
     private double lastSpeedRunDx = initialBallSpeed;
     private double lastSpeedRunDy = -initialBallSpeed;
 
@@ -60,16 +55,16 @@ public class GameCanvas extends Pane {
         background = new Image(getClass().getResource("/image/background.png").toExternalForm());
         paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
 
-        // MODIFIED: Ball launch logic based on game mode
+        
         setOnKeyPressed(e -> {
             paddle.handleKeyPress(e.getCode());
             if (gameState == GameState.PLAYING && e.getCode() == javafx.scene.input.KeyCode.SPACE) {
                 balls.stream().filter(Ball::isStuck).forEach(ball -> {
                     if (selectedGameMode == GameMode.SPEED_RUN) {
-                        // Launch with saved speed, ensuring it always goes up
+                      
                         ball.releaseBall(lastSpeedRunDx, -Math.abs(lastSpeedRunDy));
                     } else {
-                        // Power-up mode uses initial speed
+                       
                         ball.releaseBall(initialBallSpeed, -initialBallSpeed);
                     }
                 });
@@ -78,19 +73,19 @@ public class GameCanvas extends Pane {
 
         setOnKeyReleased(e -> paddle.handleKeyRelease(e.getCode()));
 
-        // MODIFIED: Handle mouse clicks for the mode selection menu
+  
         setOnMouseClicked(e -> {
             if (gameState == GameState.MENU) {
-                // Check for click on "Power-up Mode" button
+              
                 if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40)) {
                     startGame(GameMode.POWER_UP);
                 }
-                // Check for click on "Speed Run Mode" button
+              
                 else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40)) {
                     startGame(GameMode.SPEED_RUN);
                 }
             } else if (gameState == GameState.GAMEOVER || gameState == GameState.YOUWIN) {
-                // Return to menu on click to play again
+                
                 gameState = GameState.MENU;
             }
         });
@@ -106,21 +101,18 @@ public class GameCanvas extends Pane {
         }.start();
     }
 
-    /**
-     * NEW METHOD: Starts the game with a specific mode.
-     * @param mode The selected game mode (POWER_UP or SPEED_RUN).
-     */
+    
     private void startGame(GameMode mode) {
         this.selectedGameMode = mode;
         this.gameState = GameState.PLAYING;
         score = 0;
-        lives = 5;
-        // MODIFIED: Reset speed when starting a new Speed Run game
+        lives = 3;
+        
         if (mode == GameMode.SPEED_RUN) {
             lastSpeedRunDx = initialBallSpeed;
             lastSpeedRunDy = -initialBallSpeed;
         }
-        // Reset game objects
+       
         setupGameObjects(canvas.getWidth());
         resetBallToPaddle();
         requestFocus();
@@ -147,10 +139,23 @@ public class GameCanvas extends Pane {
             for (int col = 0; col < cols; col++) {
                 double x = startX + col * (brickWidth + gapX);
                 double y = startY + row * (brickHeight + gapY);
-                bricks.add(new Brick(x, y, brickWidth, brickHeight, "/image/brick.png"));
+
+              
+                String type;
+                double rand = random.nextDouble();
+                if (rand < 0.1) {
+                    type = "indestructible"; 
+                } else if (rand < 0.3) {
+                    type = "hard"; 
+                } else {
+                    type = "normal"; 
+                }
+
+                bricks.add(new Brick(x, y, brickWidth, brickHeight, type));
             }
         }
     }
+
 
     private void resetBallToPaddle() {
         balls.clear();
@@ -188,9 +193,9 @@ public class GameCanvas extends Pane {
                 ball.update();
             }
 
-            // MODIFIED: Save speed before removing the ball
+          
             if (ball.getY() > canvas.getHeight()) {
-                // If this is the last ball in Speed Run mode, save its speed
+               
                 if (balls.size() == 1 && selectedGameMode == GameMode.SPEED_RUN) {
                     lastSpeedRunDx = ball.getDx();
                     lastSpeedRunDy = ball.getDy();
@@ -198,67 +203,70 @@ public class GameCanvas extends Pane {
                 ballIterator.remove();
             }
 
-            // ✨ --- IMPROVED PADDLE COLLISION --- ✨
             if (!ball.isStuck() && ball.intersects(paddle)) {
-                // 1. Lưu lại tốc độ hiện tại của bóng
+         
                 double speed = Math.sqrt(ball.getDx() * ball.getDx() + ball.getDy() * ball.getDy());
-                // Đề phòng trường hợp bóng bị đứng yên (ví dụ: ở lần phóng đầu tiên)
+              
                 if (speed == 0) {
                     speed = initialBallSpeed;
                 }
 
-                // 2. Tính toán vị trí va chạm để lấy hướng ngang
                 double paddleCenter = paddle.getX() + paddle.getWidth() / 2;
                 double ballCenter = ball.getX() + ball.getWidth() / 2;
                 double relativeIntersectX = ballCenter - paddleCenter;
                 double normalizedIntersectX = relativeIntersectX / (paddle.getWidth() / 2);
 
-                // 3. Tạo vector hướng mới và chuẩn hóa nó (đưa về độ dài 1)
+               
                 double newDirectionX = normalizedIntersectX;
-                double newDirectionY = -1; // Luôn hướng lên trên
+                double newDirectionY = -1;
                 double length = Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
 
                 double normalizedDx = newDirectionX / length;
                 double normalizedDy = newDirectionY / length;
 
-                // 4. Áp dụng tốc độ đã lưu vào hướng mới
+                
                 ball.setDx(normalizedDx * speed);
                 ball.setDy(normalizedDy * speed);
 
-                // Đặt lại vị trí của bóng ngay trên paddle để tránh bị kẹt
                 ball.setY(paddle.getY() - ball.getHeight());
             }
 
-            // Brick collision logic based on game mode
+           
             for (Brick b : bricks) {
                 if (b.isVisible() && ball.intersects(b)) {
-
-                    // ✨ --- IMPROVED BRICK COLLISION --- ✨
                     handleBrickCollision(ball, b);
 
-                    b.setVisible(false);
-                    score += (random.nextInt(21) + 10);
-
-                    // Only spawn power-ups in POWER_UP mode
-                    if (selectedGameMode == GameMode.POWER_UP) {
-                        spawnPowerUp(b);
+                   
+                    if (b.isIndestructible()) {
+                        break;
                     }
-                    // Increase ball speed only in SPEED_RUN mode
-                    else if (selectedGameMode == GameMode.SPEED_RUN) {
-                        for (Ball currentBall : balls) {
-                            currentBall.increaseSpeed(1.005); // Increase speed by 0,5%
+
+                 
+                    boolean broken = b.hit();
+
+                    if (broken) { 
+                        score += (random.nextInt(21) + 10);
+
+                        if (selectedGameMode == GameMode.POWER_UP) {
+                            spawnPowerUp(b);
+                        } else if (selectedGameMode == GameMode.SPEED_RUN) {
+                            for (Ball currentBall : balls) {
+                                currentBall.increaseSpeed(1.005);
+                            }
                         }
                     }
+
                     break;
                 }
             }
+
         }
 
         if (balls.isEmpty() && gameState == GameState.PLAYING) {
             handleBallLost();
         }
 
-        // Only update power-ups and bullets in POWER_UP mode
+        
         if (selectedGameMode == GameMode.POWER_UP) {
             updatePowerUpsAndBullets();
         }
@@ -268,13 +276,9 @@ public class GameCanvas extends Pane {
         }
     }
 
-    /**
-     * ✨ NEW METHOD: Handles smooth collision between ball and brick.
-     * @param ball The ball
-     * @param brick The brick
-     */
+  
     private void handleBrickCollision(Ball ball, Brick brick) {
-        // Calculate centers and half-dimensions
+      
         double ballCenterX = ball.getX() + ball.getWidth() / 2;
         double ballCenterY = ball.getY() + ball.getHeight() / 2;
         double brickCenterX = brick.getX() + brick.getWidth() / 2;
@@ -283,39 +287,36 @@ public class GameCanvas extends Pane {
         double combinedHalfWidth = ball.getWidth() / 2 + brick.getWidth() / 2;
         double combinedHalfHeight = ball.getHeight() / 2 + brick.getHeight() / 2;
 
-        // Calculate distance between centers
+       
         double diffX = ballCenterX - brickCenterX;
         double diffY = ballCenterY - brickCenterY;
 
-        // Calculate overlap on each axis
+      
         double overlapX = combinedHalfWidth - Math.abs(diffX);
         double overlapY = combinedHalfHeight - Math.abs(diffY);
 
-        // Determine collision direction based on the smaller overlap
+        
         if (overlapX >= overlapY) {
-            // Vertical collision (top or bottom)
+           
             ball.bounceY();
-            // Push the ball out of the brick to prevent sticking
-            if (diffY > 0) { // Ball is below the brick
+            
+            if (diffY > 0) { 
                 ball.setY(brick.getY() + brick.getHeight());
-            } else { // Ball is above the brick
+            } else { 
                 ball.setY(brick.getY() - ball.getHeight());
             }
         } else {
-            // Horizontal collision (left or right)
+            
             ball.bounceX();
-            // Push the ball out of the brick to prevent sticking
-            if (diffX > 0) { // Ball is to the right of the brick
+           
+            if (diffX > 0) { 
                 ball.setX(brick.getX() + brick.getWidth());
-            } else { // Ball is to the left of the brick
+            } else { 
                 ball.setX(brick.getX() - ball.getWidth());
             }
         }
     }
 
-    /**
-     * NEW METHOD: Separates the update logic for power-ups and bullets for clarity.
-     */
     private void updatePowerUpsAndBullets() {
         Iterator<PowerUp> powerUpIterator = powerUps.iterator();
         while (powerUpIterator.hasNext()) {
@@ -356,14 +357,14 @@ public class GameCanvas extends Pane {
             paddle.render(gc);
             for (Brick b : bricks) b.render(gc);
             for (Ball ball : balls) ball.render(gc);
-            // Only render power-ups and bullets in POWER_UP mode
+            
             if (selectedGameMode == GameMode.POWER_UP) {
                 for (PowerUp p : powerUps) p.render(gc);
                 for (Bullet bullet : bullets) bullet.render(gc);
             }
             renderUI();
         } else {
-            // Other screens don't need to check game mode
+           
             switch (gameState) {
                 case MENU:
                     renderMenu();
@@ -378,9 +379,6 @@ public class GameCanvas extends Pane {
         }
     }
 
-    /**
-     * NEW METHOD: Checks for mouse click on a generic button.
-     */
     private boolean isButtonClicked(double mouseX, double mouseY, double buttonY) {
         double buttonWidth = 280;
         double buttonHeight = 60;
@@ -390,9 +388,7 @@ public class GameCanvas extends Pane {
                 mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
 
-    /**
-     * MODIFIED: Renders the menu with two buttons to select game mode.
-     */
+   
     private void renderMenu() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -402,7 +398,6 @@ public class GameCanvas extends Pane {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("ARKANOID", canvas.getWidth() / 2, canvas.getHeight() / 3);
 
-        // Draw Button 1: Power-Up Mode
         double btn1Y = canvas.getHeight() / 2 - 40;
         gc.setFill(Color.LIMEGREEN);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
@@ -419,7 +414,6 @@ public class GameCanvas extends Pane {
         gc.fillText("Chế độ Tốc độ", canvas.getWidth() / 2, btn2Y + 30);
     }
 
-    // ... Other methods (renderGameOver, renderYouWin, etc.) are unchanged ...
     private void applyPowerUpEffect(PowerUp p) {
         switch (p.getType()) {
             case TRUDIEM:
@@ -505,4 +499,3 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
-
