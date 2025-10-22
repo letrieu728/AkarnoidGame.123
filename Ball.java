@@ -23,16 +23,10 @@ public class Ball extends MovableObject {
         }
     }
 
-    /**
-     * HÀM MỚI: Tăng tốc độ của bóng theo một hệ số.
-     * @param factor Hệ số nhân (ví dụ: 1.02 để tăng 2%).
-     */
     public void increaseSpeed(double factor) {
-        // Giới hạn tốc độ tối đa để tránh bóng đi quá nhanh
         double maxSpeed = 15.0;
         double currentSpeed = Math.sqrt(dx * dx + dy * dy);
 
-        // Chỉ tăng tốc nếu chưa đạt tốc độ tối đa
         if (currentSpeed * factor < maxSpeed) {
             dx *= factor;
             dy *= factor;
@@ -45,8 +39,26 @@ public class Ball extends MovableObject {
 
         move();
 
-        if (x <= 0 || x + width >= canvasWidth) dx = -dx;
-        if (y <= 0) dy = -dy;
+        // ✨ --- SỬA LỖI KẸT BÓNG Ở TƯỜNG --- ✨
+        // Xử lý va chạm tường trái
+        if (x <= 0) {
+            x = 0; // Đặt lại vị trí bóng ngay tại biên
+            GameMusic.getInstance().playPaddleHitSound();
+            dx = -dx; // Đảo ngược hướng
+        }
+        // Xử lý va chạm tường phải
+        if (x + width >= canvasWidth) {
+            x = canvasWidth - width; // Đặt lại vị trí bóng ngay tại biên
+            GameMusic.getInstance().playPaddleHitSound();
+            dx = -dx; // Đảo ngược hướng
+        }
+
+        // Xử lý va chạm trần
+        if (y <= 0) {
+            y = 0; // Đặt lại vị trí bóng ngay tại biên (tùy chọn, nhưng nên có)
+            GameMusic.getInstance().playPaddleHitSound();
+            dy = -dy;
+        }
     }
 
     @Override
@@ -79,14 +91,16 @@ public class Ball extends MovableObject {
         return dx;
     }
 
-    public void setDx(double dx) {
-        this.dx = dx;
-    }
     public double getDy(){
         return dy;
+    }
+
+    public void setDx(double dx) {
+        this.dx = dx;
     }
 
     public void setDy(double dy) {
         this.dy = dy;
     }
 }
+
