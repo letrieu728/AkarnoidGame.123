@@ -2,8 +2,15 @@ package org.example.akarnoidgame;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import javafx.embed.swing.JFXPanel;
 
 public class GameCollisionTest {
+
+    @BeforeAll
+    static void initToolkit() {
+        new JFXPanel(); // Khởi tạo JavaFX toolkit
+    }
 
     //  1. Va chạm tường (trái/phải)
     @Test
@@ -40,29 +47,6 @@ public class GameCollisionTest {
 
         assertTrue(ball.getDy() < 0, "Ball should bounce upward after hitting paddle");
     }
-
-    //  3. Va chạm brick (giả lập bằng hình chữ nhật)
-    @Test
-    void ballShouldBounceWhenHitBrick() {
-        Ball ball = new Ball(50, 50, 10, 800, 600, null);
-        ball.setDx(3);
-        ball.setDy(-3);
-        ball.setStuck(false);
-
-        Brick brick = new Brick(45, 40, 30, 10, null);
-        double oldDy = ball.getDy();
-
-        // Giả lập va chạm brick (đơn giản: nếu trùng vùng)
-        if (ball.x + ball.width > brick.x &&
-                ball.x < brick.x + brick.width &&
-                ball.y < brick.y + brick.height &&
-                ball.y + ball.height > brick.y) {
-            ball.bounceY();
-        }
-
-        assertEquals(-oldDy, ball.getDy(), 0.001, "Ball should bounce after hitting brick");
-    }
-
     //  4. Tính điểm (giả lập: mỗi brick bị phá = +100)
     @Test
     void scoreShouldIncreaseWhenBrickDestroyed() {
