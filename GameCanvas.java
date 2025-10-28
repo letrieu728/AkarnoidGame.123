@@ -55,7 +55,7 @@ public class GameCanvas extends Pane {
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
 
-        background = new Image(getClass().getResource("/image/background.png").toExternalForm());
+        background = new Image(getClass().getResource("image/background.png").toExternalForm());
         paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
 
         setupEventHandlers();
@@ -619,3 +619,4 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
