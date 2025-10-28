@@ -1,5 +1,13 @@
 package org.example.akarnoidgame;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+
 import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.VPos;
@@ -20,7 +28,7 @@ import java.util.Random;
 public class GameCanvas extends Pane {
     // Enum để quản lý các trạng thái của game
     private enum GameState {
-        MENU, PLAYING, GAMEOVER, YOUWIN
+        MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE
     }
 
     // Enum để quản lý các chế độ chơi
@@ -47,9 +55,15 @@ public class GameCanvas extends Pane {
     private final double initialBallSpeed = 5;
     private double lastSpeedRunDx = initialBallSpeed;
     private double lastSpeedRunDy = -initialBallSpeed;
-
-    // Biến theo dõi level
     private int currentLevel = 1;
+    private final List<Integer> powerUpHighScores = new ArrayList<>();
+    private final List<Integer> speedRunHighScores = new ArrayList<>();
+    private static final String POWER_UP_SCORE_FILE = "highscore_powerup.txt";
+    private static final String SPEED_RUN_SCORE_FILE = "highscore_speedrun.txt";
+    private static final int MAX_HIGH_SCORES = 5; // Chỉ lưu top 5
+
+    private List<Integer> scoresToDisplay;
+    private String highScoreTitle;
 
     public GameCanvas(double width, double height) {
         canvas = new Canvas(width, height);
@@ -61,6 +75,7 @@ public class GameCanvas extends Pane {
 
         setupEventHandlers();
         setFocusTraversable(true);
+        loadAllHighScores();
 
         // Vòng lặp chính của game
         new AnimationTimer() {
@@ -129,15 +144,44 @@ public class GameCanvas extends Pane {
                         selectedGameMode = GameMode.SPEED_RUN;
                         startGame(selectedGameMode, 1);
                     }
-                    // ✨ --- THÊM LOGIC NÚT THOÁT --- ✨
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
+                        GameMusic.getInstance().playButtonClickSound();
+                        gameState = GameState.HIGH_SCORE_SELECTION;
+                    }
+                    // ✨ --- THÊM LOGIC NÚT THOÁT --- ✨
+                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         Platform.exit(); // Lệnh thoát game chuẩn của JavaFX
                     }
                     // ✨ --- KẾT THÚC --- ✨
                     break;
+                case HIGH_SCORE_SELECTION:
+                    // Click nút "BXH Power-Up" (Y: -40)
+                    if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
+                        GameMusic.getInstance().playButtonClickSound();
+                        scoresToDisplay = powerUpHighScores;
+                        highScoreTitle = "BXH (Power-Up)";
+                        gameState = GameState.HIGH_SCORE;
+                    }
+                    // Click nút "BXH Speed Run" (Y: +40)
+                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
+                        GameMusic.getInstance().playButtonClickSound();
+                        scoresToDisplay = speedRunHighScores;
+                        highScoreTitle = "BXH (Tốc Độ)";
+                        gameState = GameState.HIGH_SCORE;
+                    }
+                    // Click nút "Quay lại" (Y: +120)
+                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
+                        GameMusic.getInstance().playButtonClickSound();
+                        gameState = GameState.MENU;
+                    }
+                    break;
                 case GAMEOVER:
                 case YOUWIN:
+                    gameState = GameState.MENU;
+                    break;
+                case HIGH_SCORE: // Thêm case mới để quay lại
+                    GameMusic.getInstance().playButtonClickSound();
                     gameState = GameState.MENU;
                     break;
             }
@@ -281,6 +325,7 @@ public class GameCanvas extends Pane {
 
         if (lives <= 0) {
             // Nếu hết mạng, chuyển trạng thái và chỉ phát âm thanh Game Over
+            checkAndAddHighScore(score, selectedGameMode);
             gameState = GameState.GAMEOVER;
             GameMusic.getInstance().stopBackgroundMusic();
             GameMusic.getInstance().playGameOverSound(); // <-- Chỉ phát âm thanh này
@@ -392,6 +437,7 @@ public class GameCanvas extends Pane {
                 startGame(selectedGameMode, currentLevel);
             } else {
                 // --- Thắng level 3 -> Thắng toàn bộ game ---
+                checkAndAddHighScore(score, selectedGameMode);
                 gameState = GameState.YOUWIN;
                 GameMusic.getInstance().playYouWinSound(); // Phát âm thanh chiến thắng cuối cùng
             }
@@ -538,6 +584,65 @@ public class GameCanvas extends Pane {
             bullets.add(new Bullet(startX, startY - (i * bulletSpacing)));
         }
     }
+    private void loadAllHighScores() {
+        loadScoresFromFile(POWER_UP_SCORE_FILE, powerUpHighScores);
+        loadScoresFromFile(SPEED_RUN_SCORE_FILE, speedRunHighScores);
+    }
+
+    /**
+     * Hàm trợ giúp để tải một file điểm cụ thể vào một danh sách cụ thể.
+     */
+    private void loadScoresFromFile(String fileName, List<Integer> scoreList) {
+        scoreList.clear(); // Xóa điểm cũ
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                try {
+                    scoreList.add(Integer.parseInt(line));
+                } catch (NumberFormatException e) {
+                    System.err.println("Bỏ qua dòng điểm không hợp lệ: " + line);
+                }
+            }
+            scoreList.sort(Collections.reverseOrder());
+        } catch (FileNotFoundException e) {
+            System.out.println("Không tìm thấy file: " + fileName + ". Sẽ tạo file mới.");
+        } catch (IOException e) {
+            System.err.println("Lỗi khi đọc file: " + fileName);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Hàm trợ giúp để lưu một danh sách điểm vào một file cụ thể.
+     */
+    private void saveScoresToFile(String fileName, List<Integer> scoreList) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
+            for (int s : scoreList) {
+                writer.println(s);
+            }
+        } catch (IOException e) {
+            System.err.println("Lỗi khi lưu file: " + fileName);
+        }
+    }
+
+    /**
+     * Kiểm tra điểm số mới, thêm vào danh sách CHÍNH XÁC, và lưu lại file.
+     */
+    private void checkAndAddHighScore(int newScore, GameMode mode) {
+        // Chọn đúng danh sách và tên file dựa trên chế độ chơi
+        List<Integer> targetList = (mode == GameMode.POWER_UP) ? powerUpHighScores : speedRunHighScores;
+        String targetFile = (mode == GameMode.POWER_UP) ? POWER_UP_SCORE_FILE : SPEED_RUN_SCORE_FILE;
+
+        targetList.add(newScore);
+        targetList.sort(Collections.reverseOrder()); // Sắp xếp giảm dần
+
+        // Giữ lại top 5
+        while (targetList.size() > MAX_HIGH_SCORES) {
+            targetList.remove(targetList.size() - 1);
+        }
+
+        saveScoresToFile(targetFile, targetList); // Lưu lại file
+    }
 
     // --- CÁC HÀM VẼ (RENDER) ---
     private void render() {
@@ -557,6 +662,12 @@ public class GameCanvas extends Pane {
                 break;
             case MENU:
                 renderMenu();
+                break;
+            case HIGH_SCORE_SELECTION: // Thêm case mới
+                renderHighScoreSelection();
+                break;
+            case HIGH_SCORE: // Thêm case mới
+                renderHighScores();
                 break;
             case GAMEOVER:
                 renderGameOver();
@@ -599,11 +710,76 @@ public class GameCanvas extends Pane {
         gc.setFill(Color.WHITE);
         gc.fillText("Chế độ Tốc độ", canvas.getWidth() / 2, btn2Y + 30);
 
-        double btn3Y = canvas.getHeight() / 2 + 120; // 40 (btn2) + 60 (height) + 20 (spacing)
+        double btn3Y = canvas.getHeight() / 2 + 120;
+        gc.setFill(Color.GOLD);
+        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
+        gc.setFill(Color.BLACK);
+        gc.fillText("Bảng Xếp Hạng", canvas.getWidth() / 2, btn3Y + 30);
+
+        double btn4Y = canvas.getHeight() / 2 + 200; // 40 (btn2) + 60 (height) + 20 (spacing)
+        gc.setFill(Color.DARKGRAY);
+        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn4Y, 280, 60, 20, 20);
+        gc.setFill(Color.WHITE);
+        gc.fillText("Thoát Game", canvas.getWidth() / 2, btn4Y + 30);
+    }
+    private void renderHighScores() {
+        gc.setFill(Color.rgb(0, 0, 0, 0.7));
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+
+        gc.setFill(Color.GOLD);
+        gc.setFont(Font.font("Arial", 48));
+        gc.fillText(highScoreTitle, canvas.getWidth() / 2, canvas.getHeight() / 4); // Dùng tiêu đề động
+
+        gc.setFont(Font.font("Arial", 30));
+        gc.setFill(Color.WHITE);
+
+        double startY = canvas.getHeight() / 2 - 80;
+
+        // Dùng danh sách đã chọn
+        if (scoresToDisplay == null || scoresToDisplay.isEmpty()) {
+            gc.fillText("Chưa có điểm nào", canvas.getWidth() / 2, startY);
+        } else {
+            for (int i = 0; i < scoresToDisplay.size(); i++) {
+                gc.fillText((i + 1) + ".   " + scoresToDisplay.get(i), canvas.getWidth() / 2, startY + i * 40);
+            }
+        }
+
+        gc.setFont(Font.font("Arial", 20));
+        gc.fillText("Click để quay lại", canvas.getWidth() / 2, canvas.getHeight() - 100);
+    }
+    private void renderHighScoreSelection() {
+        gc.setFill(Color.rgb(0, 0, 0, 0.7));
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(Color.GOLD);
+        gc.setFont(Font.font("Arial", 48));
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.fillText("CHỌN BẢNG XẾP HẠNG", canvas.getWidth() / 2, canvas.getHeight() / 3);
+
+        gc.setFont(Font.font("Arial", 24));
+
+        // Tận dụng nút từ menu (Y: -40)
+        double btn1Y = canvas.getHeight() / 2 - 40;
+        gc.setFill(Color.LIMEGREEN);
+        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
+        gc.setFill(Color.BLACK);
+        gc.fillText("BXH Power-Up", canvas.getWidth() / 2, btn1Y + 30);
+
+        // Tận dụng nút từ menu (Y: +40)
+        double btn2Y = canvas.getHeight() / 2 + 40;
+        gc.setFill(Color.ORANGERED);
+        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
+        gc.setFill(Color.WHITE);
+        gc.fillText("BXH Tốc Độ", canvas.getWidth() / 2, btn2Y + 30);
+
+        // Nút quay lại (Y: +120)
+        double btn3Y = canvas.getHeight() / 2 + 120;
         gc.setFill(Color.DARKGRAY);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
         gc.setFill(Color.WHITE);
-        gc.fillText("Thoát Game", canvas.getWidth() / 2, btn3Y + 30);
+        gc.fillText("Quay lại", canvas.getWidth() / 2, btn3Y + 30);
     }
 
     // Vẽ giao diện người chơi (Điểm, Mạng, Level)
