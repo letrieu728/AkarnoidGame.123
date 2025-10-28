@@ -1,8 +1,12 @@
 package org.example.akarnoidgame;
 
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
+
+import java.awt.GraphicsEnvironment;
+
 
 /**
  * Lớp quản lý tất cả âm thanh trong game.
@@ -11,9 +15,12 @@ import java.net.URL;
 public class GameMusic {
 
     // --- Singleton Pattern ---
-    private static final GameMusic instance = new GameMusic();
+    private static GameMusic instance;
 
-    public static GameMusic getInstance() {
+    public static synchronized GameMusic getInstance() {
+        if (instance == null) {
+            instance = new GameMusic();
+        }
         return instance;
     }
 
@@ -29,26 +36,39 @@ public class GameMusic {
 
     private GameMusic() {
         // Private constructor để ngăn việc tạo đối tượng từ bên ngoài
+        ensureJavaFXInitialized();
         initializeSounds();
+    }
+    private void ensureJavaFXInitialized() {
+        try {
+            new JFXPanel(); // Khởi động toolkit nếu chưa khởi tạo
+        } catch (Exception ignored) {
+        }
     }
 
     private void initializeSounds() {
+        // Nếu đang chạy test (headless environment), bỏ qua load Media
+        if (GraphicsEnvironment.isHeadless()) {
+            System.out.println("[GameMusic] Headless environment detected — skipping audio initialization.");
+            return;
+        }
+
         try {
             // Nhạc nền (lặp lại vô hạn)
-            backgroundMusicPlayer = loadSound("nhạc nền.mp3");
+            backgroundMusicPlayer = loadSound("background.mp3");
             if (backgroundMusicPlayer != null) {
                 backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại
                 backgroundMusicPlayer.setVolume(0.3); // Giảm âm lượng nhạc nền
             }
 
             // Âm thanh hiệu ứng
-            brickBreakPlayer = loadSound("phá brick.mp3");
-            paddleHitPlayer = loadSound("va chạm paddle-tường.mp3");
-            loseLifePlayer = loadSound("mất 1 mạng.mp3");
-            gameOverPlayer = loadSound("game over.mp3");
-            youWinPlayer = loadSound("you win.mp3");
-            buttonClickPlayer = loadSound("bấm nút.mp3");
-            powerUpPlayer = loadSound("ăn được powerup.mp3");
+            brickBreakPlayer = loadSound("brick_break.mp3");
+            paddleHitPlayer = loadSound("paddle_hit.mp3");
+            loseLifePlayer = loadSound("lose_life.mp3");
+            gameOverPlayer = loadSound("game_over.mp3");
+            youWinPlayer = loadSound("you_win.mp3");
+            buttonClickPlayer = loadSound("button_click.mp3");
+            powerUpPlayer = loadSound("powerup.mp3");
 
         } catch (Exception e) {
             System.err.println("Lỗi khi khởi tạo âm thanh: " + e.getMessage());
@@ -67,6 +87,7 @@ public class GameMusic {
             return new MediaPlayer(media);
         } catch (Exception e) {
             System.err.println("Không thể tải file âm thanh: " + fileName);
+            e.printStackTrace();
             return null;
         }
     }
