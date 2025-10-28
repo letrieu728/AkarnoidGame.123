@@ -1,5 +1,6 @@
 package org.example.akarnoidgame;
 
+import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -74,20 +75,43 @@ public class GameCanvas extends Pane {
     private void setupEventHandlers() {
         // Xử lý sự kiện nhấn phím
         setOnKeyPressed(e -> {
-            paddle.handleKeyPress(e.getCode());
-            if (gameState == GameState.PLAYING && e.getCode() == KeyCode.SPACE) {
-                balls.stream().filter(Ball::isStuck).forEach(ball -> {
-                    if (selectedGameMode == GameMode.SPEED_RUN) {
-                        ball.releaseBall(lastSpeedRunDx, -Math.abs(lastSpeedRunDy));
-                    } else {
-                        ball.releaseBall(initialBallSpeed, -initialBallSpeed);
-                    }
-                });
+            if (gameState == GameState.PLAYING) {
+                // Di chuyển việc xử lý paddle vào đây
+                paddle.handleKeyPress(e.getCode());
+
+                // Xử lý phím SPACE để thả bóng
+                if (e.getCode() == KeyCode.SPACE) {
+                    balls.stream().filter(Ball::isStuck).forEach(ball -> {
+                        if (selectedGameMode == GameMode.SPEED_RUN) {
+                            ball.releaseBall(lastSpeedRunDx, -Math.abs(lastSpeedRunDy));
+                        } else {
+                            ball.releaseBall(initialBallSpeed, -initialBallSpeed);
+                        }
+                    });
+                }
+                // ✨ --- THÊM LOGIC PHÍM ESC --- ✨
+                else if (e.getCode() == KeyCode.ESCAPE) {
+                    // Dừng nhạc nền
+                    GameMusic.getInstance().stopBackgroundMusic();
+                    // Chuyển về màn hình Menu
+                    gameState = GameState.MENU;
+                    // Dọn dẹp các đối tượng game để sẵn sàng cho lần chơi mới
+                    balls.clear();
+                    bricks.clear();
+                    powerUps.clear();
+                    bullets.clear();
+                }
+                // ✨ --- KẾT THÚC --- ✨
             }
         });
 
         // Xử lý sự kiện thả phím
-        setOnKeyReleased(e -> paddle.handleKeyRelease(e.getCode()));
+        setOnKeyReleased(e -> {
+            // Chỉ xử lý thả phím nếu đang chơi
+            if (gameState == GameState.PLAYING) {
+                paddle.handleKeyRelease(e.getCode());
+            }
+        });
 
         // Xử lý sự kiện click chuột cho các trạng thái game
         setOnMouseClicked(e -> {
@@ -97,18 +121,24 @@ public class GameCanvas extends Pane {
                     if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.POWER_UP;
-                        startGame(selectedGameMode, 1); // Bắt đầu từ level 1
+                        startGame(selectedGameMode, 1);
                     }
                     // Click nút Speed Run
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.SPEED_RUN;
-                        startGame(selectedGameMode, 1); // Bắt đầu từ level 1
+                        startGame(selectedGameMode, 1);
                     }
+                    // ✨ --- THÊM LOGIC NÚT THOÁT --- ✨
+                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
+                        GameMusic.getInstance().playButtonClickSound();
+                        Platform.exit(); // Lệnh thoát game chuẩn của JavaFX
+                    }
+                    // ✨ --- KẾT THÚC --- ✨
                     break;
                 case GAMEOVER:
                 case YOUWIN:
-                    gameState = GameState.MENU; // Quay về menu
+                    gameState = GameState.MENU;
                     break;
             }
         });
@@ -568,6 +598,12 @@ public class GameCanvas extends Pane {
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
         gc.setFill(Color.WHITE);
         gc.fillText("Chế độ Tốc độ", canvas.getWidth() / 2, btn2Y + 30);
+
+        double btn3Y = canvas.getHeight() / 2 + 120; // 40 (btn2) + 60 (height) + 20 (spacing)
+        gc.setFill(Color.DARKGRAY);
+        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
+        gc.setFill(Color.WHITE);
+        gc.fillText("Thoát Game", canvas.getWidth() / 2, btn3Y + 30);
     }
 
     // Vẽ giao diện người chơi (Điểm, Mạng, Level)
@@ -619,4 +655,3 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
-
