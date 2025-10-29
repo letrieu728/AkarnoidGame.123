@@ -4,7 +4,7 @@
 - **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick + UML
 - **Lê Tuấn Dũng  (24022630)** – Ball + GameManager + Bullet + GameMusic
 - **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
-- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas ( có thể code chung )
+- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas + Junit ( có thể code chung )
 
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
