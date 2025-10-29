@@ -17,6 +17,8 @@ Liên quan đến: toàn bộ hệ thống game
 
 2. Lê Quốc Triệu
 
+Vẽ UML
+
 Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
 
 Gọi paddle.update(), ball.update() và phần render tương ứng
