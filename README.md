@@ -1,27 +1,24 @@
 # 🎮 Arkanoid – Phiên bản JavaFX
 
 ## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-Lê Tuấn Dũng Arkanoid – Phiên bản JavaFX
-
-## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-Lê Tuấn Dũng	- Tạo vòng lặp AnimationTimer và hàm update() tổng thể
+*Lê Tuấn Dũng	- Tạo vòng lặp AnimationTimer và hàm update() tổng thể
 - Xử lý trạng thái game (MENU, PLAYING, PAUSED, GAMEOVER, YOUWIN)
 - Hàm handleBrickCollision(), handleBallLost()
 - Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
 - Điều phối toàn bộ render, logic đa luồng
 - Liên quan đến	toàn bộ hệ thống game
-Lê Quốc Triệu	- Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
+*Lê Quốc Triệu	- Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
 - Gọi paddle.update(), ball.update() và phần render tương ứng
 - Xử lý danh sách balls, bricks, bullets
 - Liên kết hàm vật lý trong handleBrickCollision()
 - Liên quan đến: Ball.java, Paddle.java, Brick.java, Bullet.java, MovableObject.java, Readme.md
-Trương Thị Kim Ánh	- Xử lý phần sinh và cập nhật Power-Up:
+*Trương Thị Kim Ánh	- Xử lý phần sinh và cập nhật Power-Up:
 spawnPowerUp(), updatePowerUpsAndBullets()
 - Gọi p.applyEffect(this) trong va chạm với paddle
 - Điều khiển hiệu ứng tạm thời bằng Timeline
 - Tích hợp logic nhân đôi bóng, mở rộng paddle, trừ điểm, v.v.
 - Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, PaddleExpandPowerUp.java, BulletPowerUp.java, TruDiemPowerUp.java, Junit.
-Nguyễn Thạc Quang HuyHuy	- Thiết kế và viết phần giao diện vẽ (renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores())
+*Nguyễn Thạc Quang HuyHuy	- Thiết kế và viết phần giao diện vẽ (renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores())
 - Phần âm thanh (GameMusic.getInstance()...) và luồng nhạc
 - Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAddHighScore()
 - Giao diện chọn chế độ chơi và highscore
@@ -133,7 +130,10 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 
 ---
 ## 🧠 Cấu trúc kế thừa (UML mô tả)
-                    
+                    <p align="center">
+  <img src="src/main/resources/images/uml.png" alt="UML Diagram" width="600"/>
+</p>
+
 
 ## ▶️ Cách chạy chương trình
 1. Vào IntelliJ → **Run → Edit Configurations...**
