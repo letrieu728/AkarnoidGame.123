@@ -1,4 +1,4 @@
-package org.example.akarnoidgame;
+package org.example.game;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,6 +10,10 @@ import java.util.Collections;
 
 import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,6 +39,7 @@ public class GameCanvas extends Pane {
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
+    private Timeline gameLogicTimeline;
 
     // Các thành phần của game
     private final Canvas canvas;
@@ -70,22 +75,29 @@ public class GameCanvas extends Pane {
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
 
-        background = new Image(getClass().getResource("image/background.png").toExternalForm());
+        background = new Image(getClass().getResource("/image/background.png").toExternalForm());
         paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
 
         setupEventHandlers();
         setFocusTraversable(true);
         loadAllHighScores();
 
-        // Vòng lặp chính của game
+        // --- ⚡ Vòng lặp RENDER chính (AnimationTimer) ---
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
-                render();
+                render(); // chỉ vẽ lại khung hình
             }
         }.start();
+
+        // --- ⚙️ Vòng lặp LOGIC bằng Timeline (ổn định 60 FPS) ---
+        gameLogicTimeline = new Timeline(
+                new KeyFrame(Duration.millis(16), e -> update()) // gọi update() mỗi ~16ms (≈60 lần/giây)
+        );
+        gameLogicTimeline.setCycleCount(Timeline.INDEFINITE);
+        gameLogicTimeline.play();
     }
+
 
     private void setupEventHandlers() {
         // Xử lý sự kiện nhấn phím
@@ -104,7 +116,7 @@ public class GameCanvas extends Pane {
                         }
                     });
                 }
-                // ✨ --- THÊM LOGIC PHÍM ESC --- ✨
+                //  --- THÊM LOGIC PHÍM ESC ---
                 else if (e.getCode() == KeyCode.ESCAPE) {
                     // Dừng nhạc nền
                     GameMusic.getInstance().stopBackgroundMusic();
@@ -121,9 +133,11 @@ public class GameCanvas extends Pane {
                 if (gameState == GameState.PLAYING) {
                     gameState = GameState.PAUSED;
                     GameMusic.getInstance().pauseBackgroundMusic();
+                    gameLogicTimeline.pause();
                 } else if (gameState == GameState.PAUSED) {
                     gameState = GameState.PLAYING;
                     GameMusic.getInstance().resumeBackgroundMusic();
+                    gameLogicTimeline.play();
                 }
             }
         });
@@ -156,12 +170,12 @@ public class GameCanvas extends Pane {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.HIGH_SCORE_SELECTION;
                     }
-                    // ✨ --- THÊM LOGIC NÚT THOÁT --- ✨
+                    //  --- THÊM LOGIC NÚT THOÁT ---
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         Platform.exit(); // Lệnh thoát game chuẩn của JavaFX
                     }
-                    // ✨ --- KẾT THÚC --- ✨
+                    //  --- KẾT THÚC ---
                     break;
                 case HIGH_SCORE_SELECTION:
                     // Click nút "BXH Power-Up" (Y: -40)
