@@ -155,10 +155,12 @@ GameMusic.java – Quản lý toàn bộ âm thanh (nhạc nền, va chạm, th�
 highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của từng chế độ chơi.
 
 ---
-🧩 Sơ đồ UML tổng quan
+## 🧩 Sơ đồ UML tổng quan
+
 <p align="center">
-  <img src="https://raw.githubusercontent.com/letrieu728/AkarnoidGame.123/main/resources/images/uml.png" alt="UML Diagram" width="600" />
+  <img src="https://raw.githubusercontent.com/letrieu728/AkarnoidGame.123/main/resources/images/uml.png" alt="UML Diagram" width="600"/>
 </p>
+
 
 
 ## ▶️ Cách chạy chương trình
