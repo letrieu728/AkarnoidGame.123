@@ -56,7 +56,7 @@ Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng
 ---
 
 ## ⚙️ Công nghệ sử dụng
-- **Ngôn ngữ:** Java 25
+- **Ngôn ngữ:** Java 21
 - **Thư viện GUI:** JavaFX
 - **IDE:** IntelliJ IDEA
 - **Ảnh game:** PNG nền trong suốt (paddle, ball, brick)
@@ -173,8 +173,3 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 ---
 
 
-
-## 🏁 Kế hoạch phát triển tuần sau
-- 🕹️ Thêm di chuyển Paddle bằng phím ← →
-- 🧱 Thêm va chạm bóng–gạch
-- 🌟 Thêm Item rơi (x2 điểm, bắn đạn, nhân đôi bóng)
