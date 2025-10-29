@@ -560,7 +560,7 @@ public class GameCanvas extends Pane {
 
     public void multiplyBalls() {
         // Giới hạn số lượng bóng tối đa để tránh lag (ví dụ: 4 quả)
-        if (!balls.isEmpty() && balls.size() < 4) {
+        if (!balls.isEmpty()) {
             // Tạo một danh sách tạm thời để chứa các quả bóng mới
             // Tránh lỗi ConcurrentModificationException khi duyệt và sửa danh sách cùng lúc
             List<Ball> newBalls = new ArrayList<>();
