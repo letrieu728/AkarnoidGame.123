@@ -1,10 +1,31 @@
 # 🎮 Arkanoid – Phiên bản JavaFX
 
 ## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-- **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick + UML
-- **Lê Tuấn Dũng  (24022630)** – Ball + GameManager + Bullet + GameMusic
-- **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
-- **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas + Junit ( có thể code chung )
+Lê Tuấn Dũng Arkanoid – Phiên bản JavaFX
+
+## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
+Lê Tuấn Dũng	- Tạo vòng lặp AnimationTimer và hàm update() tổng thể
+- Xử lý trạng thái game (MENU, PLAYING, PAUSED, GAMEOVER, YOUWIN)
+- Hàm handleBrickCollision(), handleBallLost()
+- Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
+- Điều phối toàn bộ render, logic đa luồng
+- Liên quan đến	toàn bộ hệ thống game
+Lê Quốc Triệu	- Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
+- Gọi paddle.update(), ball.update() và phần render tương ứng
+- Xử lý danh sách balls, bricks, bullets
+- Liên kết hàm vật lý trong handleBrickCollision()
+- Liên quan đến: Ball.java, Paddle.java, Brick.java, Bullet.java, MovableObject.java, Readme.md
+Trương Thị Kim Ánh	- Xử lý phần sinh và cập nhật Power-Up:
+spawnPowerUp(), updatePowerUpsAndBullets()
+- Gọi p.applyEffect(this) trong va chạm với paddle
+- Điều khiển hiệu ứng tạm thời bằng Timeline
+- Tích hợp logic nhân đôi bóng, mở rộng paddle, trừ điểm, v.v.
+- Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, PaddleExpandPowerUp.java, BulletPowerUp.java, TruDiemPowerUp.java, Junit.
+Nguyễn Thạc Quang HuyHuy	- Thiết kế và viết phần giao diện vẽ (renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores())
+- Phần âm thanh (GameMusic.getInstance()...) và luồng nhạc
+- Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAddHighScore()
+- Giao diện chọn chế độ chơi và highscore
+- Liên quan đến: GameMusic.java, file điểm (highscore_powerup.txt, highscore_speedrun.txt)
 
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
@@ -19,188 +40,100 @@ Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng
 
 ---
 
-## 📁 Cấu trúc thư mục hiện tại
+## 📁 Cấu trúc thư mục 
 ```
 ArkanoidGame/
- ├── src/
- │    └── game/
- │         ├── Main.java
- │         ├── GameManager.java
- │         ├── GameCanvas.java
- │         ├── GameObject.java
- │         ├── MovableObject.java
- │         ├── Paddle.java
- │         ├── Ball.java
- │         ├── PowerUp.java
- │         ├── Item.java
- │         └── Brick.java
- └── resources/
-      └── images/
-           ├── paddle.png
-           ├── ball.png
-           ├── background.png
-           ├── x2ball.png
-           ├── x2score.png
-           ├── trudiem.png
-           ├── heart.png
-           ├── laser.png
-           ├── bullet.png
-           ├── brick1.png
-           ├── brick2.png
-           └── brick.png
-```
+│
+├── 📄 pom.xml                 # (nếu dùng Maven)
+├── 📄 ArkanoidGame.iml        # File cấu hình IntelliJ
+│
+├── 📂 src/
+│   └── 📂 main/
+│       ├── 📂 java/
+│       │   └── 📂 org/example/akarnoidgame/
+│       │       ├── 📄 Main.java
+│       │       ├── 📄 GameCanvas.java          # Trung tâm logic & render
+│       │       ├── 📄 GameMusic.java           # Quản lý âm thanh
+│       │       ├── 📄 GameObject.java          # Lớp cha cơ bản
+│       │       ├── 📄 MovableObject.java       # Lớp cha cho vật thể di chuyển
+│       │       ├── 📄 Ball.java                # Bóng
+│       │       ├── 📄 Paddle.java              # Thanh đỡ
+│       │       ├── 📄 Brick.java               # Gạch
+│       │       ├── 📄 Bullet.java              # Đạn (khi có PowerUp)
+│       │       ├── 📄 PowerUp.java             # Lớp cha cho vật phẩm
+│       │       ├── 📄 X2BallPowerUp.java       # PowerUp: nhân đôi bóng
+│       │       ├── 📄 X2ScorePowerUp.java      # PowerUp: nhân đôi điểm
+│       │       ├── 📄 PaddleExpandPowerUp.java # PowerUp: mở rộng Paddle
+│       │       ├── 📄 BulletPowerUp.java       # PowerUp: bắn đạn
+│       │       └── 📄 TruDiemPowerUp.java      # PowerUp: trừ điểm
+│       │
+│       └── 📂 resources/
+│           ├── 📂 images/
+│           │   ├── background.png
+│           │   ├── ball.png
+│           │   ├── brick.png
+│           │   ├── brick1.png
+│           │   ├── brick2.png
+│           │   ├── bullet.png
+│           │   ├── expand.png
+│           │   ├── heart.png
+│           │   ├── laser.png
+│           │   ├── paddle.png
+│           │   ├── trudiem.png
+│           │   ├── x2ball.png
+│           │   └── x2score.png
+│           │
+│           └── 📂 sounds/
+│               ├── background.mp3
+│               ├── brick_break.mp3
+│               ├── button_click.mp3
+│               ├── game_over.mp3
+│               ├── lose_life.mp3
+│               ├── paddle_hit.mp3
+│               ├── powerup.mp3
+│               └── you_win.mp3
+│
+├── 📄 highscore_powerup.txt    # Lưu điểm cao chế độ Power-Up
+├── 📄 highscore_speedrun.txt   # Lưu điểm cao chế độ Speed-Run
+└── 📄 README.md                # Tài liệu mô tả dự án, hướng dẫn chơi
 
 ---
 
-## 💡 Mô tả các lớp chính
-| Class | Vai trò | Kế thừa từ | Ghi chú |
-|-------|----------|------------|----------|
-| `GameObject` | Lớp cha trừu tượng cho tất cả vật thể trong game | — | Quản lý toạ độ, kích thước, ảnh |
-| `MovableObject` | Lớp cha cho các vật thể di chuyển được | `GameObject` | Thêm vận tốc `dx`, `dy` |
-| `Ball` | Quả bóng di chuyển, va chạm | `MovableObject` | Có ảnh `ball.png` |
-| `Paddle` | Thanh trượt điều khiển | `GameObject` | Có ảnh `paddle.png` |
-| `Brick` | Gạch tĩnh để phá | `GameObject` | Có ảnh `brick.png` |
-| `GameCanvas` | Canvas chính để vẽ toàn cảnh | — | Render toàn bộ vật thể |
-| `Main` | Điểm bắt đầu chương trình | — | Khởi tạo JavaFX Stage và Scene |
+📘 Mô tả các lớp chính
+
+GameCanvas.java – Lớp trung tâm điều khiển game: cập nhật logic, xử lý va chạm, vẽ khung hình, quản lý trạng thái (Menu, Pause, Win, Game Over) và nhập từ bàn phím/chuột.
+
+GameObject.java – Lớp cha của tất cả đối tượng trong game, chứa vị trí, kích thước, hình ảnh và hàm kiểm tra va chạm.
+
+MovableObject.java – Kế thừa GameObject, thêm vận tốc và khả năng di chuyển, bật lại khi va chạm.
+
+Ball.java – Quả bóng, di chuyển, bật lại khi chạm tường/paddle, phá gạch, hỗ trợ nhân đôi bóng.
+
+Paddle.java – Thanh đỡ người chơi điều khiển, di chuyển ngang và phản xạ bóng.
+
+Brick.java – Gạch có thể phá, cộng điểm khi vỡ, có thể rơi vật phẩm.
+
+Bullet.java – Đạn bắn ra từ paddle khi có power-up laser, phá gạch khi va chạm.
+
+PowerUp.java – Lớp cha cho vật phẩm tăng cường, rơi xuống và kích hoạt hiệu ứng khi chạm paddle.
+
+X2BallPowerUp.java – Nhân đôi số bóng.
+
+PaddleExpandPowerUp.java – Mở rộng kích thước paddle.
+
+BulletPowerUp.java – Cho phép paddle bắn đạn.
+
+X2ScorePowerUp.java – Nhân đôi điểm.
+
+TruDiemPowerUp.java – Trừ điểm người chơi.
+
+GameMusic.java – Quản lý toàn bộ âm thanh (nhạc nền, va chạm, thắng, thua, power-up).
+
+highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của từng chế độ chơi.
 
 ---
 ## 🧠 Cấu trúc kế thừa (UML mô tả)
-                    ┌──────────────────────────┐
-                    │        Application        │
-                    └──────────────┬────────────┘
-                                   │ extends
-                          ┌────────┴────────┐
-                          │   ArkanoidApp   │
-                          ├─────────────────┤
-                          │ - manager: GameManager
-                          │ - view: GameView
-                          │ - mainMenu: MainMenu
-                          │ - gameLoop: AnimationTimer
-                          │ - gameScene: Scene
-                          ├─────────────────┤
-                          │ + start(Stage)
-                          │ + setupKeyListeners(Scene)
-                          │ + switchToGameScene()
-                          │ + switchToMenuScene()
-                          └────────┬────────┘
-                                   │ uses
-                ┌──────────────────┴──────────────────┐
-                │                                     │
-        ┌───────────────┐                    ┌────────────────┐
-        │   GameManager │                    │    GameView    │
-        ├───────────────┤                    ├────────────────┤
-        │ - paddle: Paddle                  │ - canvas: Canvas
-        │ - ball: Ball                      │ - gc: GraphicsContext
-        │ - bricks: List<Brick>             ├────────────────┤
-        │ - score, lives, level, state      │ + renderAll(GameManager)
-        ├────────────────┤                   │ + draw(GameObject)
-        │ + startGame()                     └────────────────┘
-        │ + updateGame()                    │
-        │ + checkCollisions()               │
-        │ + gameOver()                      │
-        │ + loadNextLevel()                 │
-        └────────────────┘                  │
-                                             │
-                                             ▼
-                                     ┌──────────────────┐
-                                     │ CollisionHandler │
-                                     ├──────────────────┤
-                                     │ + checkCollision(obj1, obj2)
-                                     │ + handleBallPaddleCollision()
-                                     │ + handleBallBrickCollision()
-                                     │ + handleBallWallCollision()
-                                     │ + handlePaddlePowerUpCollision()
-                                     └──────────────────┘
-```text
-───────────────────────────────────────────────────────────────────────────────
-                   ABSTRACT LAYER (GameObject Hierarchy)
-───────────────────────────────────────────────────────────────────────────────
-
-┌─────────────────────────────┐
-│ <<abstract>> GameObject     │
-├─────────────────────────────┤
-│ - x, y, width, height       │
-│ - visible: boolean          │
-│ - img: Image                │
-├─────────────────────────────┤
-│ + update(): void            │
-│ + render(GraphicsContext): void │
-│ + intersects(GameObject): boolean │
-└──────────────┬──────────────┘
-               │ extends
-┌──────────────┴──────────────┐
-│ <<abstract>> MovableObject  │
-├─────────────────────────────┤
-│ - dx, dy: double            │
-├─────────────────────────────┤
-│ + move(): void              │
-│ + setVelocity(dx, dy): void │
-└────────┬────────┬───────────┘
-         │        │
-         ▼        ▼
- ┌────────────┐  ┌──────────────┐
- │   Ball     │  │   Paddle     │
- ├────────────┤  ├──────────────┤
- │ - speed    │  │ - speed      │
- │ - direction│  │ - currentPowerUp │
- ├────────────┤  ├──────────────┤
- │ + bounce() │  │ + moveLeft() │
- │ + update() │  │ + moveRight()│
- │ + render() │  │ + applyPowerUp() │
- └────────────┘  └──────────────┘
-         ▲
-         │
-  ┌──────────────┐
-  │    Brick     │
-  ├──────────────┤
-  │ - hitPoints  │
-  │ - destroyed  │
-  ├──────────────┤
-  │ + takeHit()  │
-  │ + render()   │
-  └──────────────┘
-         ▲
-         │ extends
-         │
-  ┌──────────────┐
-  │ NormalBrick  │
-  ├──────────────┤
-  │ + takeHit()  │
-  └──────────────┘
-
-───────────────────────────────────────────────────────────────────────────────
-                     POWER-UP SYSTEM (Tuần 7–8)
-───────────────────────────────────────────────────────────────────────────────
-
-┌──────────────────────────┐
-│ <<abstract>> PowerUp     │
-├──────────────────────────┤
-│ - type: String           │
-│ - duration: int          │
-├──────────────────────────┤
-│ + applyEffect(Paddle)    │
-│ + removeEffect(Paddle)   │
-│ + update()               │
-│ + render(GraphicsContext)│
-└────────┬────────┬────────┘
-         │        │
-         ▼        ▼
-┌────────────────────────────┐
-│ ExpandPaddlePowerUp        │
-│ + applyEffect(Paddle)      │
-│ + removeEffect(Paddle)     │
-└────────────────────────────┘
-┌────────────────────────────┐
-│ FastBallPowerUp            │
-│ + applyEffect(Paddle)      │
-│ + removeEffect(Paddle)     │
-└────────────────────────────┘
-
-
-
-
-
----
+                    
 
 ## ▶️ Cách chạy chương trình
 1. Vào IntelliJ → **Run → Edit Configurations...**
