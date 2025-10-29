@@ -156,10 +156,10 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 
 ---
 ## 🧩 Sơ đồ UML tổng quan
+ ```
+![alt](https://github.com/letrieu728/AkarnoidGame.123/blob/main/resources/images/uml.png)
 
-![image alt](https://github.com/letrieu728/AkarnoidGame.123/blob/fcd1edb8a90ea936b94fef89f9f756153dc2279e/resources/images/uml.png)
-
-
+ ```
 
 ## ▶️ Cách chạy chương trình
 1. Vào IntelliJ → **Run → Edit Configurations...**
