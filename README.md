@@ -1,29 +1,55 @@
 # 🎮 Arkanoid – Phiên bản JavaFX
 
-## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-*Lê Tuấn Dũng	- Tạo vòng lặp AnimationTimer và hàm update() tổng thể
-- Xử lý trạng thái game (MENU, PLAYING, PAUSED, GAMEOVER, YOUWIN)
-- Hàm handleBrickCollision(), handleBallLost()
-- Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
-- Điều phối toàn bộ render, logic đa luồng
-- Liên quan đến	toàn bộ hệ thống game
-*Lê Quốc Triệu	- Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
-- Gọi paddle.update(), ball.update() và phần render tương ứng
-- Xử lý danh sách balls, bricks, bullets
-- Liên kết hàm vật lý trong handleBrickCollision()
-- Liên quan đến: Ball.java, Paddle.java, Brick.java, Bullet.java, MovableObject.java, Readme.md
-*Trương Thị Kim Ánh	- Xử lý phần sinh và cập nhật Power-Up:
-spawnPowerUp(), updatePowerUpsAndBullets()
-- Gọi p.applyEffect(this) trong va chạm với paddle
-- Điều khiển hiệu ứng tạm thời bằng Timeline
-- Tích hợp logic nhân đôi bóng, mở rộng paddle, trừ điểm, v.v.
-- Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, PaddleExpandPowerUp.java, BulletPowerUp.java, TruDiemPowerUp.java, Junit.
-*Nguyễn Thạc Quang HuyHuy	- Thiết kế và viết phần giao diện vẽ (renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores())
-- Phần âm thanh (GameMusic.getInstance()...) và luồng nhạc
-- Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAddHighScore()
-- Giao diện chọn chế độ chơi và highscore
-- Liên quan đến: GameMusic.java, file điểm (highscore_powerup.txt, highscore_speedrun.txt)
+👨‍👩‍👧‍👦 Thành viên nhóm & Phụ trách
+1. Lê Tuấn Dũng
 
+Tạo vòng lặp AnimationTimer và hàm update() tổng thể
+
+Xử lý trạng thái game: MENU, PLAYING, PAUSED, GAMEOVER, YOUWIN
+
+Viết các hàm: handleBrickCollision(), handleBallLost()
+
+Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
+
+Điều phối toàn bộ render, logic đa luồng
+
+Liên quan đến: toàn bộ hệ thống game
+
+2. Lê Quốc Triệu
+
+Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
+
+Gọi paddle.update(), ball.update() và phần render tương ứng
+
+Xử lý danh sách balls, bricks, bullets
+
+Liên kết hàm vật lý trong handleBrickCollision()
+
+Liên quan đến: Ball.java, Paddle.java, Brick.java, Bullet.java, MovableObject.java, README.md
+
+3. Trương Thị Kim Ánh
+
+Xử lý phần sinh và cập nhật Power-Up: spawnPowerUp(), updatePowerUpsAndBullets()
+
+Gọi p.applyEffect(this) khi va chạm với paddle
+
+Điều khiển hiệu ứng tạm thời bằng Timeline
+
+Tích hợp logic nhân đôi bóng, mở rộng paddle, trừ điểm, v.v.
+
+Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, PaddleExpandPowerUp.java, BulletPowerUp.java, TruDiemPowerUp.java, JUnit
+
+4. Nguyễn Thạc Quang Huy
+
+Thiết kế và viết phần giao diện: renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores()
+
+Xử lý âm thanh (GameMusic.getInstance()...) và luồng nhạc
+
+Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAddHighScore()
+
+Giao diện chọn chế độ chơi và bảng xếp hạng
+
+Liên quan đến: GameMusic.java, file điểm highscore_powerup.txt, highscore_speedrun.txt
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
 
@@ -129,9 +155,8 @@ GameMusic.java – Quản lý toàn bộ âm thanh (nhạc nền, va chạm, th�
 highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của từng chế độ chơi.
 
 ---
-## 🧠 Cấu trúc kế thừa (UML mô tả)
-                    <p align="center">
-  <img src="src/main/resources/images/uml.png" alt="UML Diagram" width="600"/>
+<p align="center">
+  <img src="src/main/resources/images/uml_structure.png" alt="UML Diagram" width="600"/>
 </p>
 
 
