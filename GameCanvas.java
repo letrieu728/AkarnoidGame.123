@@ -28,7 +28,7 @@ import java.util.Random;
 public class GameCanvas extends Pane {
     // Enum để quản lý các trạng thái của game
     private enum GameState {
-        MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE
+        MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE, PAUSED
     }
 
     // Enum để quản lý các chế độ chơi
@@ -116,7 +116,15 @@ public class GameCanvas extends Pane {
                     powerUps.clear();
                     bullets.clear();
                 }
-                // ✨ --- KẾT THÚC --- ✨
+            }
+            if (e.getCode() == KeyCode.P) {
+                if (gameState == GameState.PLAYING) {
+                    gameState = GameState.PAUSED;
+                    GameMusic.getInstance().pauseBackgroundMusic();
+                } else if (gameState == GameState.PAUSED) {
+                    gameState = GameState.PLAYING;
+                    GameMusic.getInstance().resumeBackgroundMusic();
+                }
             }
         });
 
@@ -348,6 +356,9 @@ public class GameCanvas extends Pane {
     // --- LOGIC CẬP NHẬT GAME ---
 
     private void update() {
+        if (gameState == GameState.PAUSED) {
+            return; // Dừng mọi logic update nếu game đang tạm dừng
+        }
         if (gameState != GameState.PLAYING) return;
 
         paddle.update();
@@ -660,6 +671,18 @@ public class GameCanvas extends Pane {
                 }
                 renderUI(); // Vẽ UI
                 break;
+            case PAUSED:
+                // 1. Vẽ lại khung hình game đang bị "đóng băng"
+                paddle.render(gc);
+                for (Brick b : bricks) b.render(gc);
+                for (Ball ball : balls) ball.render(gc);
+                if (selectedGameMode == GameMode.POWER_UP) {
+                    for (PowerUp p : powerUps) p.render(gc);
+                    for (Bullet bullet : bullets) bullet.render(gc);
+                }
+                renderUI();
+                renderPauseScreen();
+                break;
             case MENU:
                 renderMenu();
                 break;
@@ -780,6 +803,22 @@ public class GameCanvas extends Pane {
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
         gc.setFill(Color.WHITE);
         gc.fillText("Quay lại", canvas.getWidth() / 2, btn3Y + 30);
+    }
+    private void renderPauseScreen() {
+        // Vẽ một lớp phủ màu đen mờ
+        gc.setFill(Color.rgb(0, 0, 0, 0.5)); // 50% trong suốt
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        // Vẽ chữ "PAUSED"
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial", 60));
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.fillText("PAUSED", canvas.getWidth() / 2, canvas.getHeight() / 2);
+
+        // Vẽ hướng dẫn
+        gc.setFont(Font.font("Arial", 20));
+        gc.fillText("Nhấn 'P' để tiếp tục", canvas.getWidth() / 2, canvas.getHeight() / 2 + 50);
     }
 
     // Vẽ giao diện người chơi (Điểm, Mạng, Level)
