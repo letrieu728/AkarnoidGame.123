@@ -167,7 +167,7 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 1. Vào IntelliJ → **Run → Edit Configurations...**
 2. Thêm dòng sau vào ô **VM Options** (thay đường dẫn bằng SDK JavaFX của bạn):
    ```
-   --module-path "C:\javafx-sdk-25\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics
+   --module-path "C:\javafx-sdk-25\lib" --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.graphics,javafx.swing  --enable-native-access=javafx.graphics 
    ```
 3. Chạy file `Main.java`
 4. Cửa sổ “Arkanoid - JavaFX Render with Images” xuất hiện 🎮
