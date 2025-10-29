@@ -105,6 +105,18 @@ public class GameMusic {
             backgroundMusicPlayer.stop();
         }
     }
+    public void pauseBackgroundMusic() {
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.pause();
+        }
+    }
+
+    // ✨ --- THÊM PHƯƠNG THỨC NÀY --- ✨
+    public void resumeBackgroundMusic() {
+        if (backgroundMusicPlayer != null) {
+            backgroundMusicPlayer.play(); // MediaPlayer.play() sẽ tự động tiếp tục nếu đang pause
+        }
+    }
 
     // Đối với các hiệu ứng âm thanh, chúng ta stop() rồi play()
     // để âm thanh có thể phát lại ngay lập tức nếu được gọi liên tiếp.
