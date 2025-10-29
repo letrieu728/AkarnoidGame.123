@@ -1,7 +1,7 @@
 # 🎮 Arkanoid – Phiên bản JavaFX
 
 ## 👨‍👩‍👧‍👦 Thành viên nhóm & phụ trách
-- **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick
+- **Lê Quốc Triệu (24022750)** – GameObject + MovableObject + Brick + UML
 - **Lê Tuấn Dũng  (24022630)** – Ball + GameManager + Bullet + GameMusic
 - **Nguyễn Thạc Quang Huy  (24022662)** – Items + Paddle
 - **Trương Thị Kim Ánh  (24022614)** – Main + GameCanvas ( có thể code chung )
