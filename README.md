@@ -157,9 +157,7 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 ---
 ## 🧩 Sơ đồ UML tổng quan
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/letrieu728/AkarnoidGame.123/main/resources/images/uml.png" alt="UML Diagram" width="600"/>
-</p>
+![image alt](https://github.com/letrieu728/AkarnoidGame.123/blob/fcd1edb8a90ea936b94fef89f9f756153dc2279e/resources/images/uml.png)
 
 
 
