@@ -47,6 +47,43 @@ public class GameCollisionTest {
 
         assertTrue(ball.getDy() < 0, "Ball should bounce upward after hitting paddle");
     }
+    //  3. Va chạm gạch (Test 1: Gạch 1 máu bị phá hủy)
+    @Test
+    void brickShouldBeDestroyedAfterOneHit() {
+        // Gạch "normal" mặc định có 1 hitPoint
+        Brick brick = new Brick(100, 100, 50, 20, "normal");
+
+        assertTrue(brick.isVisible(), "Gạch phải được hiển thị lúc đầu");
+
+        // Giả lập 1 lần va chạm
+        boolean wasDestroyed = brick.hit(); //
+
+        assertTrue(wasDestroyed, "Phương thức hit() phải trả về true khi gạch bị phá hủy");
+        assertFalse(brick.isVisible(), "Gạch phải ẩn đi sau khi bị phá hủy");
+    }
+
+    //  5. Va chạm gạch (Test 2: Gạch nhiều máu)
+    @Test
+    void multiHitBrickShouldSurviveOneHit() {
+        // Gạch "brick1" có 2 hitPoints
+        Brick brick = new Brick(100, 100, 50, 20, "brick1");
+
+        assertTrue(brick.isVisible(), "Gạch phải được hiển thị lúc đầu");
+        assertEquals(2, brick.getHitPoints(), "Gạch 'brick1' phải bắt đầu với 2 máu");
+
+        // --- Giả lập va chạm LẦN 1 ---
+        boolean wasDestroyedFirstHit = brick.hit(); //
+
+        assertFalse(wasDestroyedFirstHit, "Phương thức hit() phải trả về false ở lần va chạm đầu tiên");
+        assertTrue(brick.isVisible(), "Gạch phải CÒN HIỂN THỊ sau lần va chạm đầu tiên");
+        assertEquals(1, brick.getHitPoints(), "Gạch phải còn 1 máu");
+
+        // --- Giả lập va chạm LẦN 2 ---
+        boolean wasDestroyedSecondHit = brick.hit(); //
+
+        assertTrue(wasDestroyedSecondHit, "Phương thức hit() phải trả về true ở lần va chạm thứ hai");
+        assertFalse(brick.isVisible(), "Gạch phải ẨN ĐI sau lần va chạm thứ hai");
+    }
     //  4. Tính điểm (giả lập: mỗi brick bị phá = +100)
     @Test
     void scoreShouldIncreaseWhenBrickDestroyed() {
