@@ -13,6 +13,8 @@ Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
 
 Điều phối toàn bộ render, logic đa luồng
 
+Xử lý âm thanh (GameMusic.getInstance()...) và luồng nhạc
+
 Liên quan đến: toàn bộ hệ thống game
 
 2. Lê Quốc Triệu
@@ -44,8 +46,6 @@ Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, Paddle
 4. Nguyễn Thạc Quang Huy
 
 Thiết kế và viết phần giao diện: renderMenu(), renderPauseScreen(), renderGameOver(), renderYouWin(), renderHighScores()
-
-Xử lý âm thanh (GameMusic.getInstance()...) và luồng nhạc
 
 Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAddHighScore()
 
