@@ -1,4 +1,4 @@
-package org.example.game;
+package org.example.akarnoidgame;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,9 +10,6 @@ import java.util.Collections;
 
 import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -39,7 +36,6 @@ public class GameCanvas extends Pane {
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
-    private Timeline gameLogicTimeline;
 
     // Các thành phần của game
     private final Canvas canvas;
@@ -86,16 +82,10 @@ public class GameCanvas extends Pane {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
+                update();
                 render(); // chỉ vẽ lại khung hình
             }
         }.start();
-
-        // --- ⚙️ Vòng lặp LOGIC bằng Timeline (ổn định 60 FPS) ---
-        gameLogicTimeline = new Timeline(
-                new KeyFrame(Duration.millis(16), e -> update()) // gọi update() mỗi ~16ms (≈60 lần/giây)
-        );
-        gameLogicTimeline.setCycleCount(Timeline.INDEFINITE);
-        gameLogicTimeline.play();
     }
 
 
@@ -133,11 +123,9 @@ public class GameCanvas extends Pane {
                 if (gameState == GameState.PLAYING) {
                     gameState = GameState.PAUSED;
                     GameMusic.getInstance().pauseBackgroundMusic();
-                    gameLogicTimeline.pause();
                 } else if (gameState == GameState.PAUSED) {
                     gameState = GameState.PLAYING;
                     GameMusic.getInstance().resumeBackgroundMusic();
-                    gameLogicTimeline.play();
                 }
             }
         });
@@ -333,10 +321,19 @@ public class GameCanvas extends Pane {
 
     // Đưa bóng về lại thanh đỡ
     private void resetBallToPaddle() {
-        // Chỉ xóa bóng cũ và tạo bóng mới
         balls.clear();
 
-        Ball newBall = new Ball(paddle.getX() + paddle.getWidth() / 2, paddle.getY() - 25, 25, canvas.getWidth(), canvas.getHeight(), "/image/ball.png");
+        // Đưa paddle về giữa màn hình
+        paddle.setX(canvas.getWidth() / 2 - paddle.getWidth() / 2);
+
+        Ball newBall = new Ball(
+                paddle.getX() + paddle.getWidth() / 2,
+                paddle.getY() - 25,
+                25,
+                canvas.getWidth(),
+                canvas.getHeight(),
+                "/image/ball.png"
+        );
         newBall.setStuck(true);
         balls.add(newBall);
     }
