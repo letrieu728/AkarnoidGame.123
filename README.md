@@ -7,7 +7,7 @@ Tạo vòng lặp AnimationTimer và hàm update() tổng thể
 
 Xử lý trạng thái game: MENU, PLAYING, PAUSED, GAMEOVER, YOUWIN
 
-Viết các hàm: handleBrickCollision(), handleBallLost()
+Viết các hàm: handleBrickCollision(), handleBallLost(), upadte(), xử lý sự kiện bàn phím/chuột
 
 Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
 
