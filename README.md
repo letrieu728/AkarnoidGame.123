@@ -11,7 +11,7 @@ Viết các hàm: handleBrickCollision(), handleBallLost()
 
 Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
 
-Điều phối toàn bộ render, logic đa luồng
+Điều phối toàn bộ render
 
 Xử lý âm thanh (GameMusic.getInstance()...) và luồng nhạc
 
