@@ -37,8 +37,6 @@ Xử lý phần sinh và cập nhật Power-Up: spawnPowerUp(), updatePowerUpsAn
 
 Gọi p.applyEffect(this) khi va chạm với paddle
 
-Điều khiển hiệu ứng tạm thời bằng Timeline
-
 Tích hợp logic nhân đôi bóng, mở rộng paddle, trừ điểm, v.v.
 
 Liên quan đến: PowerUp.java, X2BallPowerUp.java, X2ScorePowerUp.java, PaddleExpandPowerUp.java, BulletPowerUp.java, TruDiemPowerUp.java, JUnit
