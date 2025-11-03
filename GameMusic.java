@@ -6,18 +6,11 @@ import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
 import java.awt.GraphicsEnvironment;
-
-
-/**
- * Lớp quản lý tất cả âm thanh trong game.
- * Sử dụng mẫu thiết kế Singleton để đảm bảo chỉ có một đối tượng GameMusic tồn tại.
- */
 public class GameMusic {
 
-    // --- Singleton Pattern ---
     private static GameMusic instance;
 
-    public static synchronized GameMusic getInstance() {
+    public static GameMusic getInstance() {
         if (instance == null) {
             instance = new GameMusic();
         }
