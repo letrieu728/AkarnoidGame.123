@@ -448,7 +448,6 @@ public class GameCanvas extends Pane {
 
         // Kiểm tra điều kiện thắng
         if (bricks.stream().noneMatch(brick -> !brick.isIndestructible() && brick.isVisible())) {
-
             GameMusic.getInstance().stopBackgroundMusic(); // Dừng nhạc nền
 
             if (currentLevel < 3) {
