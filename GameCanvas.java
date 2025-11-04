@@ -461,14 +461,11 @@ public class GameCanvas extends Pane {
         double overlapY = combinedHalfHeight - Math.abs(diffY);
 
         if (overlapX >= overlapY) {
-            // Vertical collision
             ball.bounceY();
-            // Push ball out
             if (diffY > 0) ball.setY(brick.getY() + brick.getHeight());
             else ball.setY(brick.getY() - ball.getHeight());
         } else {
             ball.bounceX();
-            // Push ball out
             if (diffX > 0) ball.setX(brick.getX() + brick.getWidth());
             else ball.setX(brick.getX() - ball.getWidth());
         }
@@ -497,7 +494,6 @@ public class GameCanvas extends Pane {
                 bulletIterator.remove();
                 continue;
             }
-            // Check bullet collision with bricks
             for (Brick brick : bricks) {
                 if (brick.isVisible() && bullet.intersects(brick)) {
                     if (brick.hit()) {
@@ -649,7 +645,7 @@ public class GameCanvas extends Pane {
                 renderUI();
                 break;
             case PAUSED:
-                // 1. Vẽ lại khung hình game đang bị "đóng băng"
+                // 1. Vẽ lại khung hình game đang bị pause
                 paddle.render(gc);
                 for (Brick b : bricks) b.render(gc);
                 for (Ball ball : balls) ball.render(gc);
@@ -849,6 +845,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
