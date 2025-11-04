@@ -16,7 +16,6 @@ public abstract class GameObject {
         this.height = height;
         if (imagePath != null && !imagePath.isEmpty()) {
             try {
-                // SỬA LẠI CÁCH NẠP ẢNH ĐỂ ĐẢM BẢO TÌM ĐÚNG TÀI NGUYÊN
                 img = new Image(getClass().getResource(imagePath).toExternalForm());
             } catch (NullPointerException e) {
                 System.err.println("Không thể tìm thấy tài nguyên hình ảnh tại: " + imagePath);
@@ -43,4 +42,5 @@ public abstract class GameObject {
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
 }
+
 
