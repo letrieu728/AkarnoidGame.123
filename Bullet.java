@@ -6,7 +6,7 @@ public class Bullet extends MovableObject {
 
     public Bullet(double startX, double startY) {
         super(startX - 5, startY, 10, 20, "/image/bullet.png");n
-        this.dy = -8.0; // Giá trị âm để di chuyển lên
+        this.dy = -8.0;
         this.dx = 0;
     }
 
@@ -22,4 +22,5 @@ public class Bullet extends MovableObject {
         }
     }
 }
+
 
