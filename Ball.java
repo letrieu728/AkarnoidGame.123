@@ -36,26 +36,20 @@ public class Ball extends MovableObject {
     @Override
     public void update() {
         if (isStuck) return;
-
         move();
-
-        // SỬA LỖI KẸT BÓNG Ở TƯỜNG 
-        // Xử lý va chạm tường trái
+        // Xử lý lỗi khi bóng kẹt tường
         if (x <= 0) {
-            x = 0; // Đặt lại vị trí bóng ngay tại biên
+            x = 0;
             GameMusic.getInstance().playPaddleHitSound();
-            dx = -dx; // Đảo ngược hướng
+            dx = -dx;
         }
-        // Xử lý va chạm tường phải
         if (x + width >= canvasWidth) {
-            x = canvasWidth - width; // Đặt lại vị trí bóng ngay tại biên
+            x = canvasWidth - width;
             GameMusic.getInstance().playPaddleHitSound();
-            dx = -dx; // Đảo ngược hướng
+            dx = -dx;
         }
-
-        // Xử lý va chạm trần
         if (y <= 0) {
-            y = 0; // Đặt lại vị trí bóng ngay tại biên (tùy chọn, nhưng nên có)
+            y = 0;
             GameMusic.getInstance().playPaddleHitSound();
             dy = -dy;
         }
@@ -103,5 +97,6 @@ public class Ball extends MovableObject {
         this.dy = dy;
     }
 }
+
 
 
