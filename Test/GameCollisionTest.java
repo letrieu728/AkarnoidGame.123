@@ -12,7 +12,9 @@ public class GameCollisionTest {
         new JFXPanel(); // Khởi tạo JavaFX toolkit
     }
 
-    //  1. Va chạm tường (trái/phải)
+    /**
+     * Kiểm tra bóng nảy lại khi chạm tường trái phải.
+     */
     @Test
     void ballShouldBounceWhenHitWall() {
         Ball ball = new Ball(0, 10, 10, 800, 600, null);
@@ -27,7 +29,9 @@ public class GameCollisionTest {
                 "Ball should bounce horizontally when hitting wall");
     }
 
-    //  2. Va chạm paddle (giả lập bằng vị trí y)
+    /**
+     * Kiểm tra bóng nảy lên khi va chạm vào paddle.
+     */
     @Test
     void ballShouldBounceWhenHitPaddle() {
         Ball ball = new Ball(100, 580, 10, 800, 600, null);
@@ -37,7 +41,6 @@ public class GameCollisionTest {
 
         Paddle paddle = new Paddle(80, 590, 100, 10, 800, null);
 
-        // Giả lập va chạm
         if (ball.getDy() > 0 &&
                 ball.y + ball.height >= paddle.y &&
                 ball.x + ball.width >= paddle.x &&

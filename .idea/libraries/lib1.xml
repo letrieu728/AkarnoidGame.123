@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib1">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../OpenJDK25U-jdk_x64_windows_hotspot_25_36/jdk-25+36/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../OpenJDK25U-jdk_x64_windows_hotspot_25_36/jdk-25+36/lib" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../../../OpenJDK25U-jdk_x64_windows_hotspot_25_36/jdk-25+36/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../OpenJDK25U-jdk_x64_windows_hotspot_25_36/jdk-25+36/lib" recursive="false" type="SOURCES" />
+  </library>
+</component>
