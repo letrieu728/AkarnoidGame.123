@@ -36,7 +36,6 @@ public class GameMusic {
         try {
             Platform.startup(() -> {}); // Khởi động JavaFX toolkit
         } catch (IllegalStateException ignored) {
-            // JavaFX đã được khởi tạo rồi, bỏ qua
         }
     }
 
@@ -48,14 +47,11 @@ public class GameMusic {
         }
 
         try {
-            // Nhạc nền (lặp lại vô hạn)
             backgroundMusicPlayer = loadSound("background.mp3");
             if (backgroundMusicPlayer != null) {
-                backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Lặp lại
-                backgroundMusicPlayer.setVolume(0.3); // Giảm âm lượng nhạc nền
+                backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                backgroundMusicPlayer.setVolume(0.3);
             }
-
-            // Âm thanh hiệu ứng
             brickBreakPlayer = loadSound("brick_break.mp3");
             paddleHitPlayer = loadSound("paddle_hit.mp3");
             loseLifePlayer = loadSound("lose_life.mp3");
@@ -72,7 +68,6 @@ public class GameMusic {
 
     private MediaPlayer loadSound(String fileName) {
         try {
-            // Đường dẫn tới file âm thanh trong resources
             URL resource = getClass().getResource("/sounds/" + fileName);
             if (resource == null) {
                 throw new IllegalArgumentException("Không tìm thấy file âm thanh: " + fileName);
@@ -105,7 +100,6 @@ public class GameMusic {
         }
     }
 
-    // THÊM PHƯƠNG THỨC NÀY 
     public void resumeBackgroundMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.play(); // MediaPlayer.play() sẽ tự động tiếp tục nếu đang pause
@@ -149,4 +143,5 @@ public class GameMusic {
         playSoundEffect(powerUpPlayer);
     }
 }
+
 
