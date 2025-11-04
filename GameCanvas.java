@@ -527,7 +527,7 @@ public class GameCanvas extends Pane {
         int bulletCount = 10;
         double bulletSpacing = 25;
 
-        for (int i = 0; i < bulletCount; i++) {.
+        for (int i = 0; i < bulletCount; i++) {
             bullets.add(new Bullet(startX, startY - (i * bulletSpacing)));
         }
     }
@@ -778,4 +778,5 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
