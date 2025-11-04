@@ -18,6 +18,11 @@ public class Ball extends MovableObject {
         dy = 0;
     }
 
+    /**
+     * Thả bóng ra để nó bắt đầu bay.
+     * @param initialDx v ban đầu theo hướng ngang
+     * @param initialDy v ban đầu theo hướng dọc
+     */
     public void releaseBall(double initialDx, double initialDy) {
         if (isStuck) {
             isStuck = false;
