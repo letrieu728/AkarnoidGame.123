@@ -31,6 +31,10 @@ public class Ball extends MovableObject {
         }
     }
 
+    /**
+     * Tăng tốc độ di chuyển của bóng theo hệ số nhất định.
+     * @param factor hệ số nhân tốc độ
+     */
     public void increaseSpeed(double factor) {
         double maxSpeed = 15.0;
         double currentSpeed = Math.sqrt(dx * dx + dy * dy);
