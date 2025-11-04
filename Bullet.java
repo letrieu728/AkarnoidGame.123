@@ -2,6 +2,9 @@ package org.example.akarnoidgame;
 
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * Lớp Bullet đại diện cho đạn được bắn ra từ thành paddle.
+ */
 public class Bullet extends MovableObject {
 
     public Bullet(double startX, double startY) {
