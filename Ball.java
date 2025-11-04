@@ -70,6 +70,10 @@ public class Ball extends MovableObject {
         }
     }
 
+    /**
+     * Vẽ bóng lên màn hình.
+     * @param gc đối tượng GraphicsContext dùng để vẽ lên canvas
+     */
     @Override
     public void render(GraphicsContext gc) {
         if (img != null)
