@@ -394,7 +394,7 @@ public class GameCanvas extends Pane {
                 ballIterator.remove();
             }
 
-            // Va chạm bóng và thanh đỡ
+            // Va chạm ball và paddle
             if (!ball.isStuck() && ball.intersects(paddle)) {
                 GameMusic.getInstance().playPaddleHitSound();
                 double speed = Math.sqrt(ball.getDx() * ball.getDx() + ball.getDy() * ball.getDy());
@@ -417,12 +417,12 @@ public class GameCanvas extends Pane {
                 ball.setY(paddle.getY() - ball.getHeight()); // Reposition ball
             }
 
-            // Va chạm bóng và gạch
+            // Va chạm ball và gạch
             for (Brick b : bricks) {
                 if (b.isVisible() && ball.intersects(b)) {
                     GameMusic.getInstance().playBrickBreakSound();
                     handleBrickCollision(ball, b);
-                    if (b.hit()) { // Check if the brick was actually destroyed
+                    if (b.hit()) { 
                         score += (random.nextInt(21) + 10);
                         if (selectedGameMode == GameMode.POWER_UP) {
                             spawnPowerUp(b);
@@ -430,7 +430,7 @@ public class GameCanvas extends Pane {
                     }
                     if (selectedGameMode == GameMode.SPEED_RUN) {
                         for (Ball currentBall : balls) {
-                            currentBall.increaseSpeed(1.005); // Increase speed slightly
+                            currentBall.increaseSpeed(1.005); 
                         }
                     }
                     break; // Ball only hits one brick per update
@@ -451,13 +451,13 @@ public class GameCanvas extends Pane {
             GameMusic.getInstance().stopBackgroundMusic(); // Dừng nhạc nền
 
             if (currentLevel < 3) {
-                // --- Thắng level 1 hoặc 2 -> Chuyển level ---
+                //  Thắng level 1 hoặc 2 -> Chuyển level 
                 currentLevel++;
                 GameMusic.getInstance().playYouWinSound(); // Phát âm thanh "hoàn thành level"
                 // Bắt đầu level tiếp theo
                 startGame(selectedGameMode, currentLevel);
             } else {
-                // --- Thắng level 3 -> Thắng toàn bộ game ---
+                // Thắng level 3 -> Thắng toàn bộ game 
                 checkAndAddHighScore(score, selectedGameMode);
                 gameState = GameState.YOUWIN;
                 GameMusic.getInstance().playYouWinSound(); // Phát âm thanh chiến thắng cuối cùng
@@ -468,7 +468,7 @@ public class GameCanvas extends Pane {
     
     // Xử lý va chạm giữa bóng và gạch
     private void handleBrickCollision(Ball ball, Brick brick) {
-        // Calculate centers and half-dimensions
+      
         double ballCenterX = ball.getX() + ball.getWidth() / 2;
         double ballCenterY = ball.getY() + ball.getHeight() / 2;
         double brickCenterX = brick.getX() + brick.getWidth() / 2;
@@ -476,16 +476,13 @@ public class GameCanvas extends Pane {
 
         double combinedHalfWidth = ball.getWidth() / 2 + brick.getWidth() / 2;
         double combinedHalfHeight = ball.getHeight() / 2 + brick.getHeight() / 2;
-
-        // Calculate distance between centers
+   
         double diffX = ballCenterX - brickCenterX;
         double diffY = ballCenterY - brickCenterY;
-
-        // Calculate overlap on each axis
+        
         double overlapX = combinedHalfWidth - Math.abs(diffX);
         double overlapY = combinedHalfHeight - Math.abs(diffY);
 
-        // Determine collision direction based on the smaller overlap
         if (overlapX >= overlapY) {
             // Vertical collision
             ball.bounceY();
@@ -493,7 +490,6 @@ public class GameCanvas extends Pane {
             if (diffY > 0) ball.setY(brick.getY() + brick.getHeight());
             else ball.setY(brick.getY() - ball.getHeight());
         } else {
-            // Horizontal collision
             ball.bounceX();
             // Push ball out
             if (diffX > 0) ball.setX(brick.getX() + brick.getWidth());
@@ -555,7 +551,7 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // --- CÁC HÀM CÔNG KHAI CHO POWER-UP TƯƠNG TÁC ---
+    // CÁC HÀM CÔNG KHAI CHO POWER-UP TƯƠNG TÁC
     public Paddle getPaddle() {
         return this.paddle;
     }
@@ -585,8 +581,7 @@ public class GameCanvas extends Pane {
 
                 newBalls.add(newBall);
             }
-
-            // Thêm tất cả các quả bóng mới vào danh sách chính
+            
             balls.addAll(newBalls);
         }
     }
@@ -611,9 +606,7 @@ public class GameCanvas extends Pane {
         loadScoresFromFile(SPEED_RUN_SCORE_FILE, speedRunHighScores);
     }
 
-    /**
-     * Hàm trợ giúp để tải một file điểm cụ thể vào một danh sách cụ thể.
-     */
+    //  Hàm trợ giúp để tải một file điểm cụ thể vào một danh sách cụ thể.
     private void loadScoresFromFile(String fileName, List<Integer> scoreList) {
         scoreList.clear(); // Xóa điểm cũ
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -634,9 +627,7 @@ public class GameCanvas extends Pane {
         }
     }
 
-    /**
-     * Hàm trợ giúp để lưu một danh sách điểm vào một file cụ thể.
-     */
+    // Hàm trợ giúp để lưu một danh sách điểm vào một file cụ thể.
     private void saveScoresToFile(String fileName, List<Integer> scoreList) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             for (int s : scoreList) {
@@ -647,9 +638,7 @@ public class GameCanvas extends Pane {
         }
     }
 
-    /**
-     * Kiểm tra điểm số mới, thêm vào danh sách CHÍNH XÁC, và lưu lại file.
-     */
+    // Kiểm tra điểm số mới, thêm vào danh sách CHÍNH XÁC, và lưu lại file.
     private void checkAndAddHighScore(int newScore, GameMode mode) {
         // Chọn đúng danh sách và tên file dựa trên chế độ chơi
         List<Integer> targetList = (mode == GameMode.POWER_UP) ? powerUpHighScores : speedRunHighScores;
@@ -666,7 +655,7 @@ public class GameCanvas extends Pane {
         saveScoresToFile(targetFile, targetList); // Lưu lại file
     }
 
-    // --- CÁC HÀM VẼ (RENDER) ---
+    // CÁC HÀM VẼ (RENDER) 
     private void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
@@ -697,10 +686,10 @@ public class GameCanvas extends Pane {
             case MENU:
                 renderMenu();
                 break;
-            case HIGH_SCORE_SELECTION: // Thêm case mới
+            case HIGH_SCORE_SELECTION: 
                 renderHighScoreSelection();
                 break;
-            case HIGH_SCORE: // Thêm case mới
+            case HIGH_SCORE:
                 renderHighScores();
                 break;
             case GAMEOVER:
@@ -881,4 +870,5 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
