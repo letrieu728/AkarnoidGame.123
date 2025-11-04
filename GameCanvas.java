@@ -88,7 +88,6 @@ public class GameCanvas extends Pane {
         }.start();
     }
 
-
     private void setupEventHandlers() {
         // Xử lý khi nhấn phím
         setOnKeyPressed(e -> {
@@ -653,7 +652,6 @@ public class GameCanvas extends Pane {
         saveScoresToFile(targetFile, targetList); // Lưu lại file
     }
 
-
         // CÁC HÀM VẼ (RENDER) 
     private void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -707,8 +705,6 @@ public class GameCanvas extends Pane {
                 mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
 
-
-    
     // Vẽ màn hình Menu
     private void renderMenu() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
@@ -873,6 +869,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
