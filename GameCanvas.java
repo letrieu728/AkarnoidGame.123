@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Random;
 
 public class GameCanvas extends Pane {
-    // Enum để quản lý các trạng thái của game
+    // Enum quản lý các trạng thái của game
     private enum GameState {
         MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE, PAUSED
     }
 
-    // Enum để quản lý các chế độ chơi
+    // Enum quản lý các chế độ chơi
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
@@ -78,7 +78,7 @@ public class GameCanvas extends Pane {
         setFocusTraversable(true);
         loadAllHighScores();
 
-        // --- ⚡ Vòng lặp RENDER chính (AnimationTimer) ---
+        // Vòng lặp RENDER chính (AnimationTimer)
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -90,7 +90,7 @@ public class GameCanvas extends Pane {
 
 
     private void setupEventHandlers() {
-        // Xử lý sự kiện nhấn phím
+        // Xử lý khi nhấn phím
         setOnKeyPressed(e -> {
             if (gameState == GameState.PLAYING) {
                 // Di chuyển việc xử lý paddle vào đây
@@ -106,7 +106,7 @@ public class GameCanvas extends Pane {
                         }
                     });
                 }
-                //  --- THÊM LOGIC PHÍM ESC ---
+                // THÊM LOGIC PHÍM ESC
                 else if (e.getCode() == KeyCode.ESCAPE) {
                     // Dừng nhạc nền
                     GameMusic.getInstance().stopBackgroundMusic();
@@ -132,13 +132,12 @@ public class GameCanvas extends Pane {
 
         // Xử lý sự kiện thả phím
         setOnKeyReleased(e -> {
-            // Chỉ xử lý thả phím nếu đang chơi
             if (gameState == GameState.PLAYING) {
                 paddle.handleKeyRelease(e.getCode());
             }
         });
 
-        // Xử lý sự kiện click chuột cho các trạng thái game
+        // Xử lý click chuột cho các trạng thái game
         setOnMouseClicked(e -> {
             switch (gameState) {
                 case MENU:
@@ -158,12 +157,12 @@ public class GameCanvas extends Pane {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.HIGH_SCORE_SELECTION;
                     }
-                    //  --- THÊM LOGIC NÚT THOÁT ---
+                    // THÊM LOGIC NÚT THOÁT 
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         Platform.exit(); // Lệnh thoát game chuẩn của JavaFX
                     }
-                    //  --- KẾT THÚC ---
+                    // KẾT THÚC
                     break;
                 case HIGH_SCORE_SELECTION:
                     // Click nút "BXH Power-Up" (Y: -40)
@@ -198,13 +197,13 @@ public class GameCanvas extends Pane {
         });
     }
 
-    // Bắt đầu một màn chơi mới
+    // Bắt đầu game mới
     private void startGame(GameMode mode, int level) {
         this.selectedGameMode = mode;
         this.gameState = GameState.PLAYING;
-        this.currentLevel = level; // Cập nhật level hiện tại
+        this.currentLevel = level;
         lives = 7;
-        // Chỉ reset điểm khi bắt đầu game mới (level 1)
+        // Chỉ reset điểm khi bắt đầu game mới
         if (level == 1) {
             score = 0;
         }
@@ -245,7 +244,7 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // --- CÁC HÀM TẠO LAYOUT GẠCH ---
+    // CÁC HÀM TẠO LAYOUT GẠCH
 
     private void setupLayoutClassic(double width) {
         int rows = 5;
@@ -306,7 +305,7 @@ public class GameCanvas extends Pane {
         createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
     }
 
-    // Hàm trợ giúp để tạo một khối gạch hình chữ nhật
+    // Hàm tạo một khối gạch hình chữ nhật
     private void createBrickRectangle(double startX, double startY, int rows, int cols, double brickWidth, double brickHeight, double gap) {
         String[] brickTypes = {"normal", "brick1", "brick2"};
         for (int row = 0; row < rows; row++) {
@@ -338,7 +337,7 @@ public class GameCanvas extends Pane {
         balls.add(newBall);
     }
 
-    // Xử lý khi bóng rơi ra ngoài
+    // Khi bóng rơi ra ngoài
     public void handleBallLost() {
         lives--; // Trừ mạng của người chơi
 
@@ -347,7 +346,7 @@ public class GameCanvas extends Pane {
             checkAndAddHighScore(score, selectedGameMode);
             gameState = GameState.GAMEOVER;
             GameMusic.getInstance().stopBackgroundMusic();
-            GameMusic.getInstance().playGameOverSound(); // <-- Chỉ phát âm thanh này
+            GameMusic.getInstance().playGameOverSound(); // Chỉ phát âm thanh này
 
             // Dọn dẹp các đối tượng trên màn hình
             powerUps.clear();
@@ -364,7 +363,8 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // --- LOGIC CẬP NHẬT GAME ---
+
+    // LOGIC CẬP NHẬT GAME 
 
     private void update() {
         if (gameState == GameState.PAUSED) {
@@ -465,6 +465,7 @@ public class GameCanvas extends Pane {
         }
     }
 
+    
     // Xử lý va chạm giữa bóng và gạch
     private void handleBrickCollision(Ball ball, Brick brick) {
         // Calculate centers and half-dimensions
@@ -880,3 +881,4 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
