@@ -1,6 +1,6 @@
 package org.example.akarnoidgame;
 
-import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
@@ -32,11 +32,10 @@ public class GameMusic {
     }
     private void ensureJavaFXInitialized() {
         try {
-            Platform.startup(() -> {}); // Khởi động JavaFX toolkit
-        } catch (IllegalStateException ignored) {
+            new JFXPanel(); // Khởi động toolkit nếu chưa khởi tạo
+        } catch (Exception ignored) {
         }
     }
-
     private void initializeSounds() {
         if (GraphicsEnvironment.isHeadless()) {
             System.out.println("[GameMusic] Headless environment detected — skipping audio initialization.");
@@ -135,6 +134,7 @@ public class GameMusic {
         playSoundEffect(powerUpPlayer);
     }
 }
+
 
 
 
