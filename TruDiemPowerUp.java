@@ -1,5 +1,8 @@
 package org.example.akarnoidgame;
 
+/**
+ * Vật phẩm "trừ điểm" - khi người chơi hứng phải thì trừ 50 điểm.
+ */
 public class TruDiemPowerUp extends PowerUp {
 
     public TruDiemPowerUp(double x, double y) {
