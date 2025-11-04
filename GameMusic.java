@@ -40,7 +40,6 @@ public class GameMusic {
     }
 
     private void initializeSounds() {
-        // Nếu đang chạy test (headless environment), bỏ qua load Media
         if (GraphicsEnvironment.isHeadless()) {
             System.out.println("[GameMusic] Headless environment detected — skipping audio initialization.");
             return;
@@ -102,10 +101,9 @@ public class GameMusic {
 
     public void resumeBackgroundMusic() {
         if (backgroundMusicPlayer != null) {
-            backgroundMusicPlayer.play(); // MediaPlayer.play() sẽ tự động tiếp tục nếu đang pause
+            backgroundMusicPlayer.play();
         }
     }
-
     // Đối với các hiệu ứng âm thanh, chúng ta stop() rồi play()
     // để âm thanh có thể phát lại ngay lập tức nếu được gọi liên tiếp.
     private void playSoundEffect(MediaPlayer player) {
@@ -143,5 +141,6 @@ public class GameMusic {
         playSoundEffect(powerUpPlayer);
     }
 }
+
 
 
