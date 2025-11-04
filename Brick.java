@@ -10,6 +10,14 @@ public class Brick extends GameObject {
     private final boolean indestructible;
     private final String type;
 
+    /**
+     * Constructor cho đối tượng Brick.
+     * @param x tọa độ X của gạch
+     * @param y tọa độ Y của gạch
+     * @param width chiều rộng của gạch
+     * @param height chiều cao của gạch
+     * @param type loại gạch
+     */
     public Brick(double x, double y, double width, double height, String type) {
         super(x, y, width, height, null);
         this.type = type.toLowerCase();
