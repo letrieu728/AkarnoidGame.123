@@ -4,7 +4,7 @@ public class BulletPowerUp extends PowerUp {
 
     public BulletPowerUp(double x, double y) {
         // Gọi constructor của lớp cha với đường dẫn ảnh tương ứng
-        super(x, y, 40, "/images/bullet.png");
+        super(x, y, 40, "/image/bullet.png");
     }
 
     @Override

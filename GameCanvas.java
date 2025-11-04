@@ -71,8 +71,8 @@ public class GameCanvas extends Pane {
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
 
-        background = new Image(getClass().getResource("/images/background.png").toExternalForm());
-        paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/images/paddle.png");
+        background = new Image(getClass().getResource("/image/background.png").toExternalForm());
+        paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
 
         setupEventHandlers();
         setFocusTraversable(true);
@@ -229,7 +229,7 @@ public class GameCanvas extends Pane {
         bullets.clear();
 
         // Thêm bóng mới
-        balls.add(new Ball(width / 2, 450, 25, width, canvas.getHeight(), "/images/ball.png"));
+        balls.add(new Ball(width / 2, 450, 25, width, canvas.getHeight(), "/image/ball.png"));
 
         // Tải layout gạch dựa trên level
         switch (level) {
@@ -332,7 +332,7 @@ public class GameCanvas extends Pane {
                 25,
                 canvas.getWidth(),
                 canvas.getHeight(),
-                "/images/ball.png"
+                "/image/ball.png"
         );
         newBall.setStuck(true);
         balls.add(newBall);
