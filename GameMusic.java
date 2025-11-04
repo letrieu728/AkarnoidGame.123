@@ -16,8 +16,6 @@ public class GameMusic {
         }
         return instance;
     }
-
-    // Media Players 
     private MediaPlayer backgroundMusicPlayer;
     private MediaPlayer brickBreakPlayer;
     private MediaPlayer paddleHitPlayer;
@@ -79,9 +77,6 @@ public class GameMusic {
             return null;
         }
     }
-
-    // Các phương thức công khai để điều khiển âm thanh
-
     public void playBackgroundMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.play();
@@ -104,8 +99,7 @@ public class GameMusic {
             backgroundMusicPlayer.play();
         }
     }
-    // Đối với các hiệu ứng âm thanh, chúng ta stop() rồi play()
-    // để âm thanh có thể phát lại ngay lập tức nếu được gọi liên tiếp.
+    // stop() rồi play() để âm thanh có thể phát lại ngay lập tức nếu được gọi liên tiếp.
     private void playSoundEffect(MediaPlayer player) {
         if (player != null) {
             player.stop();
@@ -141,6 +135,7 @@ public class GameMusic {
         playSoundEffect(powerUpPlayer);
     }
 }
+
 
 
 
