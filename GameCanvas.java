@@ -27,17 +27,14 @@ import java.util.List;
 import java.util.Random;
 
 public class GameCanvas extends Pane {
-    // Enum quản lý các trạng thái của game
     private enum GameState {
         MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE, PAUSED
     }
-
-    // Enum quản lý các chế độ chơi
+    
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
 
-    // Các thành phần của game
     private final Canvas canvas;
     private final GraphicsContext gc;
     private final Paddle paddle;
@@ -47,7 +44,6 @@ public class GameCanvas extends Pane {
     private final List<Bullet> bullets = new ArrayList<>();
     private final Image background;
 
-    // Các biến trạng thái của game
     private GameState gameState = GameState.MENU;
     private GameMode selectedGameMode;
     private int score = 0;
@@ -78,7 +74,6 @@ public class GameCanvas extends Pane {
         setFocusTraversable(true);
         loadAllHighScores();
 
-        // Vòng lặp RENDER chính (AnimationTimer)
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -89,12 +84,10 @@ public class GameCanvas extends Pane {
     }
 
     private void setupEventHandlers() {
-        // Xử lý khi nhấn phím
         setOnKeyPressed(e -> {
             if (gameState == GameState.PLAYING) {
                 paddle.handleKeyPress(e.getCode());
 
-                // Xử lý phím SPACE để thả bóng
                 if (e.getCode() == KeyCode.SPACE) {
                     balls.stream().filter(Ball::isStuck).forEach(ball -> {
                         if (selectedGameMode == GameMode.SPEED_RUN) {
@@ -104,7 +97,6 @@ public class GameCanvas extends Pane {
                         }
                     });
                 }
-                // THÊM LOGIC PHÍM ESC
                 else if (e.getCode() == KeyCode.ESCAPE) {
                     GameMusic.getInstance().stopBackgroundMusic();
                     gameState = GameState.MENU;
@@ -124,15 +116,13 @@ public class GameCanvas extends Pane {
                 }
             }
         });
-
-        // Xử lý sự kiện thả phím
+        
         setOnKeyReleased(e -> {
             if (gameState == GameState.PLAYING) {
                 paddle.handleKeyRelease(e.getCode());
             }
         });
 
-        // Xử lý click chuột cho các trạng thái game
         setOnMouseClicked(e -> {
             switch (gameState) {
                 case MENU:
@@ -150,29 +140,24 @@ public class GameCanvas extends Pane {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.HIGH_SCORE_SELECTION;
                     }
-                    // THÊM LOGIC NÚT THOÁT 
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
-                        Platform.exit(); // Lệnh thoát game chuẩn của JavaFX
+                        Platform.exit();
                     }
-                    // KẾT THÚC
                     break;
                 case HIGH_SCORE_SELECTION:
-                    // Click nút "BXH Power-Up" (Y: -40)
                     if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         scoresToDisplay = powerUpHighScores;
                         highScoreTitle = "BXH (Power-Up)";
                         gameState = GameState.HIGH_SCORE;
                     }
-                    // Click nút "BXH Speed Run" (Y: +40)
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         scoresToDisplay = speedRunHighScores;
                         highScoreTitle = "BXH (Tốc Độ)";
                         gameState = GameState.HIGH_SCORE;
                     }
-                    // Click nút "Quay lại" (Y: +120)
                     else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.MENU;
@@ -189,8 +174,7 @@ public class GameCanvas extends Pane {
             }
         });
     }
-
-    // Bắt đầu game mới
+    // Khởi tạo trò chơi
     private void startGame(GameMode mode, int level) {
         this.selectedGameMode = mode;
         this.gameState = GameState.PLAYING;
@@ -211,7 +195,6 @@ public class GameCanvas extends Pane {
         requestFocus();
     }
 
-    // Thiết lập các đối tượng trong game theo layout
     private void setupGameObjects(double width, int level) {
         bricks.clear();
         powerUps.clear();
@@ -227,13 +210,11 @@ public class GameCanvas extends Pane {
             case 3:
                 setupLayoutCorners(width);
                 break;
-            default: // Level 1
+            default:
                 setupLayoutClassic(width);
                 break;
         }
     }
-
-    // CÁC HÀM TẠO LAYOUT GẠCH
 
     private void setupLayoutClassic(double width) {
         int rows = 5;
@@ -290,7 +271,6 @@ public class GameCanvas extends Pane {
         createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
     }
 
-    // Hàm tạo một khối gạch hình chữ nhật
     private void createBrickRectangle(double startX, double startY, int rows, int cols, double brickWidth, double brickHeight, double gap) {
         String[] brickTypes = {"normal", "brick1", "brick2"};
         for (int row = 0; row < rows; row++) {
@@ -303,11 +283,8 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Đưa bóng về lại thanh đỡ
     private void resetBallToPaddle() {
         balls.clear();
-
-        // Đưa paddle về giữa màn hình
         paddle.setX(canvas.getWidth() / 2 - paddle.getWidth() / 2);
 
         Ball newBall = new Ball(
@@ -322,18 +299,13 @@ public class GameCanvas extends Pane {
         balls.add(newBall);
     }
 
-    // Khi bóng rơi ra ngoài
     public void handleBallLost() {
-        lives--; // Trừ mạng của người chơi
-
+        lives--;
         if (lives <= 0) {
-            // Nếu hết mạng, chuyển trạng thái và chỉ phát âm thanh Game Over
             checkAndAddHighScore(score, selectedGameMode);
             gameState = GameState.GAMEOVER;
             GameMusic.getInstance().stopBackgroundMusic();
-            GameMusic.getInstance().playGameOverSound(); // Chỉ phát âm thanh này
-
-            // Dọn dẹp các đối tượng trên màn hình
+            GameMusic.getInstance().playGameOverSound();
             powerUps.clear();
             bullets.clear();
             balls.clear();
@@ -344,18 +316,14 @@ public class GameCanvas extends Pane {
             resetBallToPaddle();
         }
     }
-
   // LOGIC CẬP NHẬT GAME 
-
     private void update() {
         if (gameState == GameState.PAUSED) {
             return;
         }
         if (gameState != GameState.PLAYING) return;
-
         paddle.update();
 
-        // Cập nhật bóng
         Iterator<Ball> ballIterator = balls.iterator();
         while (ballIterator.hasNext()) {
             Ball ball = ballIterator.next();
@@ -366,7 +334,6 @@ public class GameCanvas extends Pane {
                 ball.update();
             }
 
-            // Xử lý bóng rơi
             if (ball.getY() > canvas.getHeight()) {
                 if (balls.size() == 1 && selectedGameMode == GameMode.SPEED_RUN) {
                     lastSpeedRunDx = ball.getDx();
@@ -375,7 +342,6 @@ public class GameCanvas extends Pane {
                 ballIterator.remove();
             }
 
-            // Va chạm ball và paddle
             if (!ball.isStuck() && ball.intersects(paddle)) {
                 GameMusic.getInstance().playPaddleHitSound();
                 double speed = Math.sqrt(ball.getDx() * ball.getDx() + ball.getDy() * ball.getDy());
@@ -387,18 +353,17 @@ public class GameCanvas extends Pane {
                 double normalizedIntersectX = relativeIntersectX / (paddle.getWidth() / 2);
 
                 double newDirectionX = normalizedIntersectX;
-                double newDirectionY = -1; // Always bounce up
+                double newDirectionY = -1;
                 double length = Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
-                if (length == 0) length = 1; // Avoid division by zero
+                if (length == 0) length = 1;
                 double normalizedDx = newDirectionX / length;
                 double normalizedDy = newDirectionY / length;
 
                 ball.setDx(normalizedDx * speed);
                 ball.setDy(normalizedDy * speed);
-                ball.setY(paddle.getY() - ball.getHeight()); // Reposition ball
+                ball.setY(paddle.getY() - ball.getHeight());
             }
 
-            // Va chạm ball và gạch
             for (Brick b : bricks) {
                 if (b.isVisible() && ball.intersects(b)) {
                     GameMusic.getInstance().playBrickBreakSound();
@@ -427,7 +392,6 @@ public class GameCanvas extends Pane {
             updatePowerUpsAndBullets();
         }
 
-        // Kiểm tra điều kiện thắng
         if (bricks.stream().noneMatch(brick -> !brick.isIndestructible() && brick.isVisible())) {
             GameMusic.getInstance().stopBackgroundMusic();
 
@@ -442,8 +406,7 @@ public class GameCanvas extends Pane {
             }
         }
     }
-    
-    // Xử lý va chạm giữa bóng và gạch
+
     private void handleBrickCollision(Ball ball, Brick brick) {
       
         double ballCenterX = ball.getX() + ball.getWidth() / 2;
@@ -471,7 +434,6 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Cập nhật vật phẩm và đạn
     private void updatePowerUpsAndBullets() {
         Iterator<PowerUp> powerUpIterator = powerUps.iterator();
         while (powerUpIterator.hasNext()) {
@@ -506,7 +468,6 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Tạo vật phẩm
     private void spawnPowerUp(Brick b) {
         if (random.nextDouble() < 0.35) {
             int type = random.nextInt(5);
@@ -523,8 +484,6 @@ public class GameCanvas extends Pane {
             powerUps.add(newPowerUp);
         }
     }
-
-    // CÁC HÀM CÔNG KHAI CHO POWER-UP TƯƠNG TÁC
     public Paddle getPaddle() {
         return this.paddle;
     }
@@ -539,19 +498,13 @@ public class GameCanvas extends Pane {
     }
 
     public void multiplyBalls() {
-        // Giới hạn số lượng bóng tối đa để tránh lag (ví dụ: 4 quả)
         if (!balls.isEmpty()) {
-            // Tạo một danh sách tạm thời để chứa các quả bóng mới
-            // Tránh lỗi ConcurrentModificationException khi duyệt và sửa danh sách cùng lúc
             List<Ball> newBalls = new ArrayList<>();
 
             for (Ball existingBall : balls) {
-                // Tạo một quả bóng mới tại vị trí của quả bóng hiện có
                 Ball newBall = new Ball(existingBall.getX(), existingBall.getY(), 25, canvas.getWidth(), canvas.getHeight(), "/image/ball.png");
 
-                // Thả quả bóng mới với vận tốc x ngược lại và vận tốc y giữ nguyên
                 newBall.releaseBall(-existingBall.getDx(), existingBall.getDy());
-
                 newBalls.add(newBall);
             }
             
@@ -560,17 +513,13 @@ public class GameCanvas extends Pane {
     }
 
     public void shootBullets() {
-        // Lấy vị trí bắt đầu từ tâm của thanh đỡ
         double startX = paddle.getX() + paddle.getWidth() / 2;
         double startY = paddle.getY();
 
         int bulletCount = 10;
         double bulletSpacing = 25;
 
-        // Vòng lặp để tạo ra một chùm đạn
         for (int i = 0; i < bulletCount; i++) {
-            // Tạo một viên đạn mới, với mỗi viên đạn sau được đặt cao hơn một chút
-            // để chúng không xuất hiện cùng một lúc tại một điểm.
             bullets.add(new Bullet(startX, startY - (i * bulletSpacing)));
         }
     }
@@ -579,7 +528,6 @@ public class GameCanvas extends Pane {
         loadScoresFromFile(SPEED_RUN_SCORE_FILE, speedRunHighScores);
     }
 
-    //  Hàm trợ giúp để tải một file điểm cụ thể vào một danh sách cụ thể.
     private void loadScoresFromFile(String fileName, List<Integer> scoreList) {
         scoreList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -600,7 +548,6 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Hàm trợ giúp để lưu một danh sách điểm vào một file cụ thể.
     private void saveScoresToFile(String fileName, List<Integer> scoreList) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
             for (int s : scoreList) {
@@ -611,24 +558,20 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Kiểm tra điểm số mới, thêm vào danh sách CHÍNH XÁC, và lưu lại file.
     private void checkAndAddHighScore(int newScore, GameMode mode) {
-        // Chọn đúng danh sách và tên file dựa trên chế độ chơi
         List<Integer> targetList = (mode == GameMode.POWER_UP) ? powerUpHighScores : speedRunHighScores;
         String targetFile = (mode == GameMode.POWER_UP) ? POWER_UP_SCORE_FILE : SPEED_RUN_SCORE_FILE;
 
         targetList.add(newScore);
         targetList.sort(Collections.reverseOrder());
 
-        // Giữ lại top 5
         while (targetList.size() > MAX_HIGH_SCORES) {
             targetList.remove(targetList.size() - 1);
         }
 
         saveScoresToFile(targetFile, targetList);
     }
-
-        // CÁC HÀM VẼ (RENDER) 
+    // CÁC HÀM VẼ (RENDER) 
     private void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
@@ -645,7 +588,6 @@ public class GameCanvas extends Pane {
                 renderUI();
                 break;
             case PAUSED:
-                // 1. Vẽ lại khung hình game đang bị pause
                 paddle.render(gc);
                 for (Brick b : bricks) b.render(gc);
                 for (Ball ball : balls) ball.render(gc);
@@ -674,7 +616,6 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // Hàm kiểm tra click vào nút
     private boolean isButtonClicked(double mouseX, double mouseY, double buttonY, double buttonWidth, double buttonHeight) {
         double buttonX = canvas.getWidth() / 2 - buttonWidth / 2;
         return mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
@@ -691,7 +632,6 @@ public class GameCanvas extends Pane {
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText("ARKANOID", canvas.getWidth() / 2, canvas.getHeight() / 3);
 
-        // Nút Power-Up
         double btn1Y = canvas.getHeight() / 2 - 40;
         gc.setFill(Color.LIMEGREEN);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
@@ -699,7 +639,6 @@ public class GameCanvas extends Pane {
         gc.setFont(Font.font("Arial", 24));
         gc.fillText("Chế độ Power-Up", canvas.getWidth() / 2, btn1Y + 30);
 
-        // Nút Speed Run
         double btn2Y = canvas.getHeight() / 2 + 40;
         gc.setFill(Color.ORANGERED);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
@@ -712,7 +651,7 @@ public class GameCanvas extends Pane {
         gc.setFill(Color.BLACK);
         gc.fillText("Bảng Xếp Hạng", canvas.getWidth() / 2, btn3Y + 30);
 
-        double btn4Y = canvas.getHeight() / 2 + 200; // 40 (btn2) + 60 (height) + 20 (spacing)
+        double btn4Y = canvas.getHeight() / 2 + 200;
         gc.setFill(Color.DARKGRAY);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn4Y, 280, 60, 20, 20);
         gc.setFill(Color.WHITE);
@@ -733,7 +672,6 @@ public class GameCanvas extends Pane {
 
         double startY = canvas.getHeight() / 2 - 80;
 
-        // Dùng danh sách đã chọn
         if (scoresToDisplay == null || scoresToDisplay.isEmpty()) {
             gc.fillText("Chưa có điểm nào", canvas.getWidth() / 2, startY);
         } else {
@@ -757,21 +695,18 @@ public class GameCanvas extends Pane {
 
         gc.setFont(Font.font("Arial", 24));
 
-        // Tận dụng nút từ menu (Y: -40)
         double btn1Y = canvas.getHeight() / 2 - 40;
         gc.setFill(Color.LIMEGREEN);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
         gc.setFill(Color.BLACK);
         gc.fillText("BXH Power-Up", canvas.getWidth() / 2, btn1Y + 30);
 
-        // Tận dụng nút từ menu (Y: +40)
         double btn2Y = canvas.getHeight() / 2 + 40;
         gc.setFill(Color.ORANGERED);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
         gc.setFill(Color.WHITE);
         gc.fillText("BXH Tốc Độ", canvas.getWidth() / 2, btn2Y + 30);
 
-        // Nút quay lại (Y: +120)
         double btn3Y = canvas.getHeight() / 2 + 120;
         gc.setFill(Color.DARKGRAY);
         gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
@@ -779,18 +714,15 @@ public class GameCanvas extends Pane {
         gc.fillText("Quay lại", canvas.getWidth() / 2, btn3Y + 30);
     }
     private void renderPauseScreen() {
-        // Vẽ một lớp phủ màu đen mờ
-        gc.setFill(Color.rgb(0, 0, 0, 0.5)); // 50% trong suốt
+        gc.setFill(Color.rgb(0, 0, 0, 0.5));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        // Vẽ chữ "PAUSED"
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", 60));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.fillText("PAUSED", canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-        // Vẽ hướng dẫn
         gc.setFont(Font.font("Arial", 20));
         gc.fillText("Nhấn 'P' để tiếp tục", canvas.getWidth() / 2, canvas.getHeight() / 2 + 50);
     }
@@ -801,15 +733,12 @@ public class GameCanvas extends Pane {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", 24));
 
-        // Hiển thị Điểm
         gc.setTextAlign(TextAlignment.LEFT);
         gc.fillText("Điểm: " + score, 10, 30);
 
-        // Hiển thị Mạng
         gc.setTextAlign(TextAlignment.RIGHT);
         gc.fillText("Mạng: " + lives, canvas.getWidth() - 10, 30);
 
-        // Hiển thị Level
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("Level: " + currentLevel, canvas.getWidth() / 2, 30);
     }
@@ -845,6 +774,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
