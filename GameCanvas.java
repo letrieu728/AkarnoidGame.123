@@ -512,9 +512,9 @@ public class GameCanvas extends Pane {
 
     // Tạo vật phẩm
     private void spawnPowerUp(Brick b) {
-        if (random.nextDouble() < 0.35) { // 35% chance to spawn a power-up
-            int type = random.nextInt(5); // 5 types of power-ups currently
-            double x = b.getX() + b.getWidth() / 2 - 20; // Center the power-up horizontally
+        if (random.nextDouble() < 0.35) {
+            int type = random.nextInt(5);
+            double x = b.getX() + b.getWidth() / 2 - 20;
             double y = b.getY();
 
             PowerUp newPowerUp = switch (type) {
@@ -535,7 +535,7 @@ public class GameCanvas extends Pane {
 
     public void addScore(int amount) {
         this.score += amount;
-        if (this.score < 0) this.score = 0; // Prevent score from going below zero
+        if (this.score < 0) this.score = 0;
     }
 
     public void multiplyScore(int factor) {
@@ -568,8 +568,8 @@ public class GameCanvas extends Pane {
         double startX = paddle.getX() + paddle.getWidth() / 2;
         double startY = paddle.getY();
 
-        int bulletCount = 10; // Số lượng đạn bắn ra mỗi lần
-        double bulletSpacing = 25; // Khoảng cách giữa các viên đạn để tạo thành một luồng
+        int bulletCount = 10;
+        double bulletSpacing = 25;
 
         // Vòng lặp để tạo ra một chùm đạn
         for (int i = 0; i < bulletCount; i++) {
@@ -585,7 +585,7 @@ public class GameCanvas extends Pane {
 
     //  Hàm trợ giúp để tải một file điểm cụ thể vào một danh sách cụ thể.
     private void loadScoresFromFile(String fileName, List<Integer> scoreList) {
-        scoreList.clear(); // Xóa điểm cũ
+        scoreList.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -622,14 +622,14 @@ public class GameCanvas extends Pane {
         String targetFile = (mode == GameMode.POWER_UP) ? POWER_UP_SCORE_FILE : SPEED_RUN_SCORE_FILE;
 
         targetList.add(newScore);
-        targetList.sort(Collections.reverseOrder()); // Sắp xếp giảm dần
+        targetList.sort(Collections.reverseOrder());
 
         // Giữ lại top 5
         while (targetList.size() > MAX_HIGH_SCORES) {
             targetList.remove(targetList.size() - 1);
         }
 
-        saveScoresToFile(targetFile, targetList); // Lưu lại file
+        saveScoresToFile(targetFile, targetList);
     }
 
         // CÁC HÀM VẼ (RENDER) 
@@ -646,7 +646,7 @@ public class GameCanvas extends Pane {
                     for (PowerUp p : powerUps) p.render(gc);
                     for (Bullet bullet : bullets) bullet.render(gc);
                 }
-                renderUI(); // Vẽ UI
+                renderUI();
                 break;
             case PAUSED:
                 // 1. Vẽ lại khung hình game đang bị "đóng băng"
@@ -730,7 +730,7 @@ public class GameCanvas extends Pane {
 
         gc.setFill(Color.GOLD);
         gc.setFont(Font.font("Arial", 48));
-        gc.fillText(highScoreTitle, canvas.getWidth() / 2, canvas.getHeight() / 4); // Dùng tiêu đề động
+        gc.fillText(highScoreTitle, canvas.getWidth() / 2, canvas.getHeight() / 4);
 
         gc.setFont(Font.font("Arial", 30));
         gc.setFill(Color.WHITE);
@@ -849,6 +849,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
