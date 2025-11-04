@@ -1,5 +1,8 @@
 package org.example.akarnoidgame;
 
+/**
+ * Vật phẩm "đạn" - cho phép thanh đỡ bắn đạn để phá gạch.
+ */
 public class BulletPowerUp extends PowerUp {
 
     public BulletPowerUp(double x, double y) {
