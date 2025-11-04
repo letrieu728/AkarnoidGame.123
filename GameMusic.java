@@ -36,6 +36,10 @@ public class GameMusic {
         } catch (Exception ignored) {
         }
     }
+
+    /**
+     * Khởi tạo toàn bộ âm thanh cần thiết cho game.
+     */
     private void initializeSounds() {
         if (GraphicsEnvironment.isHeadless()) {
             System.out.println("[GameMusic] Headless environment detected — skipping audio initialization.");
@@ -43,11 +47,13 @@ public class GameMusic {
         }
 
         try {
+            // nạp nhạc nền
             backgroundMusicPlayer = loadSound("background.mp3");
             if (backgroundMusicPlayer != null) {
                 backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
                 backgroundMusicPlayer.setVolume(0.3);
             }
+            // nạp các hiệu ứng âm thanh khác
             brickBreakPlayer = loadSound("brick_break.mp3");
             paddleHitPlayer = loadSound("paddle_hit.mp3");
             loseLifePlayer = loadSound("lose_life.mp3");
