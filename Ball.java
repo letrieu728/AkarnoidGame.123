@@ -45,6 +45,9 @@ public class Ball extends MovableObject {
         }
     }
 
+    /**
+     * Cập nhật trạng thái và vị trí của bóng trong mỗi frame.
+     */
     @Override
     public void update() {
         if (isStuck) return;
