@@ -1,8 +1,6 @@
 package org.example.akarnoidgame;
 
-/**
- * Lớp trừu tượng cho các đối tượng có thể di chuyển.
- */
+// Lớp trừu tượng cho các đối tượng có thể di chuyển.
 public abstract class MovableObject extends GameObject {
     protected double dx, dy;
 
@@ -15,3 +13,4 @@ public abstract class MovableObject extends GameObject {
         y += dy;
     }
 }
+
