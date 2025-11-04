@@ -16,7 +16,7 @@ public class Brick extends GameObject {
 
         // Định nghĩa thuộc tính cho từng loại gạch
         switch (this.type) {
-            // ✨ --- SỬA LẠI TÊN CASE VÀ ĐƯỜNG DẪN ẢNH --- ✨
+            // SỬA LẠI TÊN CASE VÀ ĐƯỜNG DẪN ẢNH 
             case "brick1": // Tên mới: Gạch 2 lần chạm
                 hitPoints = 2;
                 indestructible = false;
@@ -77,3 +77,4 @@ public class Brick extends GameObject {
     public int getHitPoints() { return hitPoints; }
     public String getType() { return type; }
 }
+
