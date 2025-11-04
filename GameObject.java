@@ -9,6 +9,14 @@ public abstract class GameObject {
     protected boolean visible = true;
     protected Image img;
 
+    /**
+     * Khởi tạo một đối tượng game(GameObject)
+     * @param x tọa độ X ban đầu của đối tượng
+     * @param y tọa độ Y ban đầu của đối tượng
+     * @param width chiều rộng của đối tượng
+     * @param height chiều cao của đối tượng
+     * @param imagePath đường dẫn
+     */
     public GameObject(double x, double y, double width, double height, String imagePath) {
         this.x = x;
         this.y = y;
