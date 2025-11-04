@@ -20,17 +20,17 @@ public class Brick extends GameObject {
             case "brick1": // Tên mới: Gạch 2 lần chạm
                 hitPoints = 2;
                 indestructible = false;
-                img = loadImage("/image/brick1.png"); // Ảnh cho gạch 2 máu
+                img = loadImage("/images/brick1.png"); // Ảnh cho gạch 2 máu
                 break;
             case "brick2": // Tên mới: Gạch 4 lần chạm
                 hitPoints = 4;
                 indestructible = false;
-                img = loadImage("/image/brick2.png"); // Ảnh cho gạch 4 máu
+                img = loadImage("/images/brick2.png"); // Ảnh cho gạch 4 máu
                 break;
             default: // Gạch "normal" mặc định
                 hitPoints = 1;
                 indestructible = false;
-                img = loadImage("/image/brick.png"); // Ảnh cho gạch thường
+                img = loadImage("/images/brick.png"); // Ảnh cho gạch thường
                 break;
         }
     }

@@ -1,6 +1,6 @@
 package org.example.akarnoidgame;
 
-import javafx.embed.swing.JFXPanel;
+import javafx.application.Platform;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
@@ -34,8 +34,9 @@ public class GameMusic {
     }
     private void ensureJavaFXInitialized() {
         try {
-            new JFXPanel(); // Khởi động toolkit nếu chưa khởi tạo
-        } catch (Exception ignored) {
+            Platform.startup(() -> {}); // Khởi động JavaFX toolkit
+        } catch (IllegalStateException ignored) {
+            // JavaFX đã được khởi tạo rồi, bỏ qua
         }
     }
 
