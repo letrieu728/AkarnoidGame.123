@@ -11,26 +11,25 @@ public class Brick extends GameObject {
     private final String type;
 
     public Brick(double x, double y, double width, double height, String type) {
-        super(x, y, width, height, null); // Image sẽ được load trong switch
+        super(x, y, width, height, null);
         this.type = type.toLowerCase();
 
         // Định nghĩa thuộc tính cho từng loại gạch
         switch (this.type) {
-            // SỬA LẠI TÊN CASE VÀ ĐƯỜNG DẪN ẢNH 
-            case "brick1": // Tên mới: Gạch 2 lần chạm
+            case "brick1":
                 hitPoints = 2;
                 indestructible = false;
-                img = loadImage("/image/brick1.png"); // Ảnh cho gạch 2 máu
+                img = loadImage("/image/brick1.png");
                 break;
-            case "brick2": // Tên mới: Gạch 4 lần chạm
+            case "brick2":
                 hitPoints = 4;
                 indestructible = false;
-                img = loadImage("/image/brick2.png"); // Ảnh cho gạch 4 máu
+                img = loadImage("/image/brick2.png");
                 break;
-            default: // Gạch "normal" mặc định
+            default:
                 hitPoints = 1;
                 indestructible = false;
-                img = loadImage("/image/brick.png"); // Ảnh cho gạch thường
+                img = loadImage("/image/brick.png");
                 break;
         }
     }
@@ -77,4 +76,5 @@ public class Brick extends GameObject {
     public int getHitPoints() { return hitPoints; }
     public String getType() { return type; }
 }
+
 
