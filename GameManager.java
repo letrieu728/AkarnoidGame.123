@@ -3,9 +3,7 @@ package org.example.akarnoidgame;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Lớp quản lý màn chơi, có thể mở rộng thêm menu, restart.
- */
+// Lớp quản lý màn chơi, có thể mở rộng thêm menu, restart.
 public class GameManager {
     private final Stage stage;
     private Scene gameScene;
