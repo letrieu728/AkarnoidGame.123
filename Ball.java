@@ -39,7 +39,7 @@ public class Ball extends MovableObject {
 
         move();
 
-        // ✨ --- SỬA LỖI KẸT BÓNG Ở TƯỜNG --- ✨
+        // SỬA LỖI KẸT BÓNG Ở TƯỜNG 
         // Xử lý va chạm tường trái
         if (x <= 0) {
             x = 0; // Đặt lại vị trí bóng ngay tại biên
@@ -103,4 +103,5 @@ public class Ball extends MovableObject {
         this.dy = dy;
     }
 }
+
 
