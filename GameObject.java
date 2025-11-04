@@ -3,9 +3,7 @@ package org.example.akarnoidgame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-/**
- * Lớp cơ sở trừu tượng cho tất cả đối tượng trong game.
- */
+// Lớp cơ sở trừu tượng cho tất cả đối tượng trong game.
 public abstract class GameObject {
     protected double x, y, width, height;
     protected boolean visible = true;
@@ -45,3 +43,4 @@ public abstract class GameObject {
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; }
 }
+
