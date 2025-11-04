@@ -284,13 +284,9 @@ public class GameCanvas extends Pane {
         double brickHeight = 20;
         double gap = 10;
 
-        // Góc trên bên trái
         createBrickRectangle(60, 80, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        // Góc trên bên phải
         createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 80, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        // Góc dưới bên trái
         createBrickRectangle(60, 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        // Góc dưới bên phải
         createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
     }
 
@@ -342,10 +338,7 @@ public class GameCanvas extends Pane {
             bullets.clear();
             balls.clear();
         } else {
-            // Nếu vẫn còn mạng, thì mới phát âm thanh mất mạng và reset bóng
-            GameMusic.getInstance().playLoseLifeSound(); // <-- Di chuyển vào đây
-
-            // Dọn dẹp power-up và đạn cũ, reset bóng
+            GameMusic.getInstance().playLoseLifeSound();
             powerUps.clear();
             bullets.clear();
             resetBallToPaddle();
@@ -356,7 +349,7 @@ public class GameCanvas extends Pane {
 
     private void update() {
         if (gameState == GameState.PAUSED) {
-            return; // Dừng mọi logic update nếu game đang tạm dừng
+            return;
         }
         if (gameState != GameState.PLAYING) return;
 
@@ -421,7 +414,7 @@ public class GameCanvas extends Pane {
                             currentBall.increaseSpeed(1.005); 
                         }
                     }
-                    break; // Ball only hits one brick per update
+                    break;
                 }
             }
         }
@@ -859,6 +852,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
