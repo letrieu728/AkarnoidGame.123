@@ -726,7 +726,6 @@ public class GameCanvas extends Pane {
         gc.setFont(Font.font("Arial", 20));
         gc.fillText("Nhấn 'P' để tiếp tục", canvas.getWidth() / 2, canvas.getHeight() / 2 + 50);
     }
-
     // Vẽ giao diện người chơi (Điểm, Mạng, Level)
     private void renderUI() {
         gc.setTextBaseline(VPos.TOP);
@@ -742,7 +741,6 @@ public class GameCanvas extends Pane {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("Level: " + currentLevel, canvas.getWidth() / 2, 30);
     }
-
     // Vẽ màn hình Game Over
     private void renderGameOver() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
@@ -757,8 +755,6 @@ public class GameCanvas extends Pane {
         gc.setFont(Font.font("Arial", 20));
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
-
-    
     // Vẽ màn hình Chiến thắng
     private void renderYouWin() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
@@ -774,14 +770,3 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
