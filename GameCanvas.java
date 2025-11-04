@@ -429,19 +429,16 @@ public class GameCanvas extends Pane {
 
         // Kiểm tra điều kiện thắng
         if (bricks.stream().noneMatch(brick -> !brick.isIndestructible() && brick.isVisible())) {
-            GameMusic.getInstance().stopBackgroundMusic(); // Dừng nhạc nền
+            GameMusic.getInstance().stopBackgroundMusic();
 
-            if (currentLevel < 3) {
-                //  Thắng level 1 hoặc 2 -> Chuyển level 
+            if (currentLevel < 3) 
                 currentLevel++;
-                GameMusic.getInstance().playYouWinSound(); // Phát âm thanh "hoàn thành level"
-                // Bắt đầu level tiếp theo
+                GameMusic.getInstance().playYouWinSound();
                 startGame(selectedGameMode, currentLevel);
             } else {
-                // Thắng level 3 -> Thắng toàn bộ game 
                 checkAndAddHighScore(score, selectedGameMode);
                 gameState = GameState.YOUWIN;
-                GameMusic.getInstance().playYouWinSound(); // Phát âm thanh chiến thắng cuối cùng
+                GameMusic.getInstance().playYouWinSound();
             }
         }
     }
@@ -503,11 +500,11 @@ public class GameCanvas extends Pane {
             // Check bullet collision with bricks
             for (Brick brick : bricks) {
                 if (brick.isVisible() && bullet.intersects(brick)) {
-                    if (brick.hit()) { // Check if brick was destroyed
-                        score += 25; // Add score for bullet hit
+                    if (brick.hit()) {
+                        score += 25;
                     }
-                    bulletIterator.remove(); // Remove bullet after hit
-                    break; // Bullet hits only one brick
+                    bulletIterator.remove();
+                    break;
                 }
             }
         }
@@ -852,6 +849,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
 
