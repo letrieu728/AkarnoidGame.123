@@ -363,8 +363,7 @@ public class GameCanvas extends Pane {
         }
     }
 
-
-    // LOGIC CẬP NHẬT GAME 
+  // LOGIC CẬP NHẬT GAME 
 
     private void update() {
         if (gameState == GameState.PAUSED) {
@@ -464,7 +463,6 @@ public class GameCanvas extends Pane {
             }
         }
     }
-
     
     // Xử lý va chạm giữa bóng và gạch
     private void handleBrickCollision(Ball ball, Brick brick) {
@@ -655,7 +653,8 @@ public class GameCanvas extends Pane {
         saveScoresToFile(targetFile, targetList); // Lưu lại file
     }
 
-    // CÁC HÀM VẼ (RENDER) 
+
+        // CÁC HÀM VẼ (RENDER) 
     private void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
@@ -708,6 +707,8 @@ public class GameCanvas extends Pane {
                 mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
 
+
+    
     // Vẽ màn hình Menu
     private void renderMenu() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
@@ -772,6 +773,7 @@ public class GameCanvas extends Pane {
         gc.setFont(Font.font("Arial", 20));
         gc.fillText("Click để quay lại", canvas.getWidth() / 2, canvas.getHeight() - 100);
     }
+
     private void renderHighScoreSelection() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -855,6 +857,7 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 
+    
     // Vẽ màn hình Chiến thắng
     private void renderYouWin() {
         gc.setFill(Color.rgb(0, 0, 0, 0.7));
@@ -870,5 +873,6 @@ public class GameCanvas extends Pane {
         gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
     }
 }
+
 
 
