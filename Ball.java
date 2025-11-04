@@ -3,6 +3,9 @@ package org.example.akarnoidgame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * Khởi tạo 1 quả bóng trong game.
+ */
 public class Ball extends MovableObject {
     private final double canvasWidth, canvasHeight;
     private boolean isStuck = true;
