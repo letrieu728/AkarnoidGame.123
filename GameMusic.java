@@ -17,7 +17,7 @@ public class GameMusic {
         return instance;
     }
 
-    // --- Media Players ---
+    // Media Players 
     private MediaPlayer backgroundMusicPlayer;
     private MediaPlayer brickBreakPlayer;
     private MediaPlayer paddleHitPlayer;
@@ -86,7 +86,7 @@ public class GameMusic {
         }
     }
 
-    // --- Các phương thức công khai để điều khiển âm thanh ---
+    // Các phương thức công khai để điều khiển âm thanh
 
     public void playBackgroundMusic() {
         if (backgroundMusicPlayer != null) {
@@ -105,7 +105,7 @@ public class GameMusic {
         }
     }
 
-    // ✨ --- THÊM PHƯƠNG THỨC NÀY --- ✨
+    // THÊM PHƯƠNG THỨC NÀY 
     public void resumeBackgroundMusic() {
         if (backgroundMusicPlayer != null) {
             backgroundMusicPlayer.play(); // MediaPlayer.play() sẽ tự động tiếp tục nếu đang pause
@@ -149,3 +149,4 @@ public class GameMusic {
         playSoundEffect(powerUpPlayer);
     }
 }
+
