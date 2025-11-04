@@ -12,41 +12,34 @@ public class Paddle extends MovableObject {
     private final double originalWidth;
     private boolean isExpanded = false;
     private long expansionEndTime;
-    private static final double EXPANSION_AMOUNT = 15; // Lượng mở rộng mỗi bên
+    private static final double EXPANSION_AMOUNT = 15;
 
     public Paddle(double x, double y, double width, double height, double canvasWidth, String imagePath) {
         super(x, y, width, height, imagePath);
         this.canvasWidth = canvasWidth;
-        this.originalWidth = width; // Lưu lại chiều rộng ban đầu
+        this.originalWidth = width;
     }
-
-    // HÀM MỚI: Kích hoạt hiệu ứng mở rộng
     public void expand() {
-        // Nếu paddle chưa được mở rộng, hãy mở rộng nó
         if (!isExpanded) {
-            this.x -= EXPANSION_AMOUNT; // Dịch sang trái 15px
-            this.width += (EXPANSION_AMOUNT * 2); // Tăng chiều rộng 30px
+            this.x -= EXPANSION_AMOUNT;
+            this.width += (EXPANSION_AMOUNT * 2);
             this.isExpanded = true;
         }
-        // Đặt lại thời gian hiệu lực (kể cả khi đang được mở rộng)
-        this.expansionEndTime = System.currentTimeMillis() + 7000; // 7 giây từ bây giờ
+        this.expansionEndTime = System.currentTimeMillis() + 7000;
     }
-
-    // HÀM MỚI: Quay về kích thước ban đầu 
     private void resetSize() {
-        this.x += EXPANSION_AMOUNT; // Dịch lại sang phải 15px
-        this.width = this.originalWidth; // Trả về chiều rộng ban đầu
+        this.x += EXPANSION_AMOUNT;
+        this.width = this.originalWidth;
         this.isExpanded = false;
     }
 
     @Override
     public void update() {
-        // LOGIC MỚI: Kiểm tra nếu hết thời gian mở rộng 
+        // Kiểm tra nếu hết thời gian mở rộng 
         if (isExpanded && System.currentTimeMillis() > expansionEndTime) {
             resetSize();
         }
-
-        // Logic di chuyển và kiểm tra biên không đổi
+        // Va chạm biên
         move();
         if (x < 0) x = 0;
         if (x + width > canvasWidth) x = canvasWidth - width;
