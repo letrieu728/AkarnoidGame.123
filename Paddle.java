@@ -8,7 +8,6 @@ public class Paddle extends MovableObject {
     private final double speed = 7;
     private final double canvasWidth;
 
-    // CÁC BIẾN MỚI ĐỂ XỬ LÝ EXPAND 
     private final double originalWidth;
     private boolean isExpanded = false;
     private long expansionEndTime;
@@ -35,7 +34,6 @@ public class Paddle extends MovableObject {
 
     @Override
     public void update() {
-        // Kiểm tra nếu hết thời gian mở rộng 
         if (isExpanded && System.currentTimeMillis() > expansionEndTime) {
             resetSize();
         }
