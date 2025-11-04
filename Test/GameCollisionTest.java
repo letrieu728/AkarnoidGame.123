@@ -50,7 +50,10 @@ public class GameCollisionTest {
 
         assertTrue(ball.getDy() < 0, "Ball should bounce upward after hitting paddle");
     }
-    //  3. Va chạm gạch (Test 1: Gạch 1 máu bị phá hủy)
+
+    /**
+     * Kiểm tra xem gạch loại "normal" có bị phá hủy sau một lần va chạm không.
+     */
     @Test
     void brickShouldBeDestroyedAfterOneHit() {
         // Gạch "normal" mặc định có 1 hitPoint
@@ -65,7 +68,9 @@ public class GameCollisionTest {
         assertFalse(brick.isVisible(), "Gạch phải ẩn đi sau khi bị phá hủy");
     }
 
-    //  5. Va chạm gạch (Test 2: Gạch nhiều máu)
+    /**
+     * Kiểm tra gạch loại "brick1" (loại cần 2 hit mới vỡ).
+     */
     @Test
     void multiHitBrickShouldSurviveOneHit() {
         // Gạch "brick1" có 2 hitPoints
@@ -87,7 +92,10 @@ public class GameCollisionTest {
         assertTrue(wasDestroyedSecondHit, "Phương thức hit() phải trả về true ở lần va chạm thứ hai");
         assertFalse(brick.isVisible(), "Gạch phải ẨN ĐI sau lần va chạm thứ hai");
     }
-    //  4. Tính điểm (giả lập: mỗi brick bị phá = +100)
+
+    /**
+     * Kiểm tra xem điểm có tăng đúng khi gạch bị phá hủy không.
+     */
     @Test
     void scoreShouldIncreaseWhenBrickDestroyed() {
         int score = 0;
