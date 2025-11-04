@@ -42,6 +42,10 @@ public class Brick extends GameObject {
         }
     }
 
+    /**
+     * Xử lý khi gạch bị bóng đập trúng.
+     * @return true nếu gạch bị phá hủy sau va chạm và ngược lại
+     */
     public boolean hit() {
         if (indestructible) {
             return false;
