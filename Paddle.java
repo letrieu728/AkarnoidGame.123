@@ -8,7 +8,7 @@ public class Paddle extends MovableObject {
     private final double speed = 7;
     private final double canvasWidth;
 
-    // --- CÁC BIẾN MỚI ĐỂ XỬ LÝ EXPAND ---
+    // CÁC BIẾN MỚI ĐỂ XỬ LÝ EXPAND 
     private final double originalWidth;
     private boolean isExpanded = false;
     private long expansionEndTime;
@@ -20,7 +20,7 @@ public class Paddle extends MovableObject {
         this.originalWidth = width; // Lưu lại chiều rộng ban đầu
     }
 
-    // --- HÀM MỚI: Kích hoạt hiệu ứng mở rộng ---
+    // HÀM MỚI: Kích hoạt hiệu ứng mở rộng
     public void expand() {
         // Nếu paddle chưa được mở rộng, hãy mở rộng nó
         if (!isExpanded) {
@@ -32,7 +32,7 @@ public class Paddle extends MovableObject {
         this.expansionEndTime = System.currentTimeMillis() + 7000; // 7 giây từ bây giờ
     }
 
-    // --- HÀM MỚI: Quay về kích thước ban đầu ---
+    // HÀM MỚI: Quay về kích thước ban đầu 
     private void resetSize() {
         this.x += EXPANSION_AMOUNT; // Dịch lại sang phải 15px
         this.width = this.originalWidth; // Trả về chiều rộng ban đầu
@@ -41,7 +41,7 @@ public class Paddle extends MovableObject {
 
     @Override
     public void update() {
-        // --- LOGIC MỚI: Kiểm tra nếu hết thời gian mở rộng ---
+        // LOGIC MỚI: Kiểm tra nếu hết thời gian mở rộng 
         if (isExpanded && System.currentTimeMillis() > expansionEndTime) {
             resetSize();
         }
