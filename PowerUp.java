@@ -1,6 +1,6 @@
 package org.example.akarnoidgame;
 import javafx.scene.canvas.GraphicsContext;
-/**
+/*
  * LỚP TRỪU TƯỢNG MỚI cho tất cả các vật phẩm Power-up.
  * Kế thừa từ MovableObject để có thể di chuyển.
  */
@@ -26,3 +26,4 @@ public abstract class PowerUp extends MovableObject {
     }
     public abstract void applyEffect(GameCanvas gameCanvas);
 }
+
