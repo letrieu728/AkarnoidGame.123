@@ -157,7 +157,7 @@ highscore_powerup.txt / highscore_speedrun.txt – Lưu điểm cao nhất của
 ---
 ## 🧩 Sơ đồ UML tổng quan
  ```
-![alt](https://github.com/letrieu728/AkarnoidGame.123/blob/main/resources/images/uml.png)
+![alt](https://github.com/letrieu728/AkarnoidGame.123/blob/main/resources/image/uml.png?raw=true)
 
  ```
 
