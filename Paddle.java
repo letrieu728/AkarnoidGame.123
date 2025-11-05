@@ -36,6 +36,9 @@ public class Paddle extends MovableObject {
         this.isExpanded = false;
     }
 
+    /**
+     * Cập nhật trạng thái và vị trí.
+     */
     @Override
     public void update() {
         if (isExpanded && System.currentTimeMillis() > expansionEndTime) {
