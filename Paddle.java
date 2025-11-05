@@ -19,9 +19,6 @@ public class Paddle extends MovableObject {
         this.originalWidth = width;
     }
 
-    /**
-     * Mở rộng kích thước của paddle sang 2 bên trong khoảng thời gian giới hạn(7 giây).
-     */
     public void expand() {
         if (!isExpanded) {
             this.x -= EXPANSION_AMOUNT;
