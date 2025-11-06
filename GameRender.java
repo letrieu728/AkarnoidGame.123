@@ -18,6 +18,23 @@ public class GameRenderer {
         this.background = background;
     }
 
+    /**
+     * Vẽ toàn bộ khung hình của game tùy theo trạng thái hiên tại.
+     * @param state trạng thái hiện tại
+     * @param mode chế độ chơi hiện tại
+     * @param paddle thanh chắn
+     * @param bricks gạch
+     * @param balls bóng
+     * @param powerUps vật phẩm
+     * @param bullets đạn
+     * @param score điểm hiện tại
+     * @param lives số mạng còn tại
+     * @param level mức độ hiện tại
+     * @param canvasWidth  chiều rộng vùng vẽ
+     * @param canvasHeight chiều cao vùng vẽ
+     * @param scoresToDisplay danh sách điểm cần hiển thị
+     * @param highScoreTitle tiêu đề
+     */
     public void render(GameCanvas.GameState state,
                        GameCanvas.GameMode mode,
                        Paddle paddle,
