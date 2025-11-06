@@ -1,24 +1,11 @@
 package org.example.akarnoidgame;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Collections;
-
 import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
-
-import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
@@ -27,12 +14,14 @@ import java.util.List;
 import java.util.Random;
 
 public class GameCanvas extends Pane {
-    private enum GameState {
+    public enum GameState {
         MENU, PLAYING, GAMEOVER, YOUWIN, HIGH_SCORE_SELECTION, HIGH_SCORE, PAUSED
     }
+
     public enum GameMode {
         POWER_UP, SPEED_RUN
     }
+
     private final Canvas canvas;
     private final GraphicsContext gc;
     private final Paddle paddle;
@@ -41,6 +30,7 @@ public class GameCanvas extends Pane {
     private final List<PowerUp> powerUps = new ArrayList<>();
     private final List<Bullet> bullets = new ArrayList<>();
     private final Image background;
+    private final GameRenderer renderer;
 
     private GameState gameState = GameState.MENU;
     private GameMode selectedGameMode;
@@ -51,12 +41,8 @@ public class GameCanvas extends Pane {
     private double lastSpeedRunDx = initialBallSpeed;
     private double lastSpeedRunDy = -initialBallSpeed;
     private int currentLevel = 1;
-    private final List<Integer> powerUpHighScores = new ArrayList<>();
-    private final List<Integer> speedRunHighScores = new ArrayList<>();
-    private static final String POWER_UP_SCORE_FILE = "highscore_powerup.txt";
-    private static final String SPEED_RUN_SCORE_FILE = "highscore_speedrun.txt";
-    private static final int MAX_HIGH_SCORES = 5; // Chỉ lưu top 5
-
+    private final HighScoreManager scoreManager;
+    private final LevelManager levelManager;
     private List<Integer> scoresToDisplay;
     private String highScoreTitle;
 
@@ -64,13 +50,13 @@ public class GameCanvas extends Pane {
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
-
+        scoreManager = new HighScoreManager();
+        levelManager = new LevelManager();
         background = new Image(getClass().getResource("/image/background.png").toExternalForm());
         paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
-
+        renderer = new GameRenderer(gc, background);
         setupEventHandlers();
         setFocusTraversable(true);
-        loadAllHighScores();
 
         new AnimationTimer() {
             @Override
@@ -95,8 +81,7 @@ public class GameCanvas extends Pane {
                             ball.releaseBall(initialBallSpeed, -initialBallSpeed);
                         }
                     });
-                }
-                else if (e.getCode() == KeyCode.ESCAPE) {
+                } else if (e.getCode() == KeyCode.ESCAPE) {
                     GameMusic.getInstance().stopBackgroundMusic();
                     gameState = GameState.MENU;
                     balls.clear();
@@ -127,17 +112,14 @@ public class GameCanvas extends Pane {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.POWER_UP;
                         startGame(selectedGameMode, 1);
-                    }
-                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.SPEED_RUN;
                         startGame(selectedGameMode, 1);
-                    }
-                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.HIGH_SCORE_SELECTION;
-                    }
-                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         Platform.exit();
                     }
@@ -146,19 +128,15 @@ public class GameCanvas extends Pane {
 
                     if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
-                        scoresToDisplay = powerUpHighScores;
+                        scoresToDisplay = scoreManager.getPowerUpHighScores();
                         highScoreTitle = "BXH (Power-Up)";
                         gameState = GameState.HIGH_SCORE;
-                    }
-
-                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
-                        scoresToDisplay = speedRunHighScores;
+                        scoresToDisplay = scoreManager.getSpeedRunHighScores();
                         highScoreTitle = "BXH (Tốc Độ)";
                         gameState = GameState.HIGH_SCORE;
-                    }
-
-                    else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.MENU;
                     }
@@ -174,6 +152,7 @@ public class GameCanvas extends Pane {
             }
         });
     }
+
     // Bắt đầu một màn chơi mới
     private void startGame(GameMode mode, int level) {
         this.selectedGameMode = mode;
@@ -201,85 +180,7 @@ public class GameCanvas extends Pane {
         balls.clear();
         bullets.clear();
         balls.add(new Ball(width / 2, 450, 25, width, canvas.getHeight(), "/image/ball.png"));
-
-        switch (level) {
-            case 2:
-                setupLayoutTriangle(width);
-                break;
-            case 3:
-                setupLayoutCorners(width);
-                break;
-            default:
-                setupLayoutClassic(width);
-                break;
-        }
-    }
-
-    private void setupLayoutClassic(double width) {
-        int rows = 5;
-        int cols = 10;
-        double brickWidth = 60;
-        double brickHeight = 25;
-        double startX = 80;
-        double startY = 80;
-        double gapX = 20;
-        double gapY = 15;
-        String[] brickTypes = {"normal", "brick1", "brick2"};
-
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                double x = startX + col * (brickWidth + gapX);
-                double y = startY + row * (brickHeight + gapY);
-                String randomType = brickTypes[random.nextInt(brickTypes.length)];
-                bricks.add(new Brick(x, y, brickWidth, brickHeight, randomType));
-            }
-        }
-    }
-
-    private void setupLayoutTriangle(double width) {
-        int numRows = 7;
-        double brickWidth = 60;
-        double brickHeight = 25;
-        double gapX = 10;
-        double gapY = 10;
-        String[] brickTypes = {"normal", "brick1", "brick2"};
-
-        for (int row = 0; row < numRows; row++) {
-            int numBricksInRow = row + 1;
-            double totalRowWidth = numBricksInRow * brickWidth + (numBricksInRow - 1) * gapX;
-            double startX = (width - totalRowWidth) / 2;
-            double y = 80 + row * (brickHeight + gapY);
-            for (int col = 0; col < numBricksInRow; col++) {
-                double x = startX + col * (brickWidth + gapX);
-                String randomType = brickTypes[random.nextInt(brickTypes.length)];
-                bricks.add(new Brick(x, y, brickWidth, brickHeight, randomType));
-            }
-        }
-    }
-
-    private void setupLayoutCorners(double width) {
-        int rowsPerCorner = 3;
-        int colsPerCorner = 4;
-        double brickWidth = 50;
-        double brickHeight = 20;
-        double gap = 10;
-
-        createBrickRectangle(60, 80, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 80, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        createBrickRectangle(60, 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-        createBrickRectangle(width - 60 - (colsPerCorner * (brickWidth + gap)), 300, rowsPerCorner, colsPerCorner, brickWidth, brickHeight, gap);
-    }
-
-    private void createBrickRectangle(double startX, double startY, int rows, int cols, double brickWidth, double brickHeight, double gap) {
-        String[] brickTypes = {"normal", "brick1", "brick2"};
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                double x = startX + col * (brickWidth + gap);
-                double y = startY + row * (brickHeight + gap);
-                String randomType = brickTypes[random.nextInt(brickTypes.length)];
-                bricks.add(new Brick(x, y, brickWidth, brickHeight, randomType));
-            }
-        }
+        bricks.addAll(levelManager.loadLevel(level, width));
     }
 
     private void resetBallToPaddle() {
@@ -302,7 +203,7 @@ public class GameCanvas extends Pane {
         lives--;
 
         if (lives <= 0) {
-            checkAndAddHighScore(score, selectedGameMode);
+            scoreManager.checkAndAddHighScore(score, selectedGameMode);
             gameState = GameState.GAMEOVER;
             GameMusic.getInstance().stopBackgroundMusic();
             GameMusic.getInstance().playGameOverSound();
@@ -405,7 +306,7 @@ public class GameCanvas extends Pane {
 
                 startGame(selectedGameMode, currentLevel);
             } else {
-                checkAndAddHighScore(score, selectedGameMode);
+                scoreManager.checkAndAddHighScore(score, selectedGameMode);
                 gameState = GameState.YOUWIN;
                 GameMusic.getInstance().playYouWinSound();
             }
@@ -466,7 +367,7 @@ public class GameCanvas extends Pane {
 
             for (Brick brick : bricks) {
                 if (brick.isVisible() && bullet.intersects(brick)) {
-                    if (brick.hit()) { 
+                    if (brick.hit()) {
                         score += 25;
                     }
                     bulletIterator.remove();
@@ -531,97 +432,25 @@ public class GameCanvas extends Pane {
             bullets.add(new Bullet(startX, startY - (i * bulletSpacing)));
         }
     }
-    private void loadAllHighScores() {
-        loadScoresFromFile(POWER_UP_SCORE_FILE, powerUpHighScores);
-        loadScoresFromFile(SPEED_RUN_SCORE_FILE, speedRunHighScores);
-    }
 
-    private void loadScoresFromFile(String fileName, List<Integer> scoreList) {
-        scoreList.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                try {
-                    scoreList.add(Integer.parseInt(line));
-                } catch (NumberFormatException e) {
-                    System.err.println("Bỏ qua dòng điểm không hợp lệ: " + line);
-                }
-            }
-            scoreList.sort(Collections.reverseOrder());
-        } catch (FileNotFoundException e) {
-            System.out.println("Không tìm thấy file: " + fileName + ". Sẽ tạo file mới.");
-        } catch (IOException e) {
-            System.err.println("Lỗi khi đọc file: " + fileName);
-            e.printStackTrace();
-        }
-    }
-    
-    private void saveScoresToFile(String fileName, List<Integer> scoreList) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-            for (int s : scoreList) {
-                writer.println(s);
-            }
-        } catch (IOException e) {
-            System.err.println("Lỗi khi lưu file: " + fileName);
-        }
-    }
-    
-    private void checkAndAddHighScore(int newScore, GameMode mode) {
-        List<Integer> targetList = (mode == GameMode.POWER_UP) ? powerUpHighScores : speedRunHighScores;
-        String targetFile = (mode == GameMode.POWER_UP) ? POWER_UP_SCORE_FILE : SPEED_RUN_SCORE_FILE;
-
-        targetList.add(newScore);
-        targetList.sort(Collections.reverseOrder());
-
-        while (targetList.size() > MAX_HIGH_SCORES) {
-            targetList.remove(targetList.size() - 1);
-        }
-
-        saveScoresToFile(targetFile, targetList);
-    }
     // --- CÁC HÀM VẼ (RENDER) ---
     private void render() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.drawImage(background, 0, 0, canvas.getWidth(), canvas.getHeight());
-
-        switch (gameState) {
-            case PLAYING:
-                paddle.render(gc);
-                for (Brick b : bricks) b.render(gc);
-                for (Ball ball : balls) ball.render(gc);
-                if (selectedGameMode == GameMode.POWER_UP) {
-                    for (PowerUp p : powerUps) p.render(gc);
-                    for (Bullet bullet : bullets) bullet.render(gc);
-                }
-                renderUI();
-                break;
-            case PAUSED:
-                paddle.render(gc);
-                for (Brick b : bricks) b.render(gc);
-                for (Ball ball : balls) ball.render(gc);
-                if (selectedGameMode == GameMode.POWER_UP) {
-                    for (PowerUp p : powerUps) p.render(gc);
-                    for (Bullet bullet : bullets) bullet.render(gc);
-                }
-                renderUI();
-                renderPauseScreen();
-                break;
-            case MENU:
-                renderMenu();
-                break;
-            case HIGH_SCORE_SELECTION:
-                renderHighScoreSelection();
-                break;
-            case HIGH_SCORE:
-                renderHighScores();
-                break;
-            case GAMEOVER:
-                renderGameOver();
-                break;
-            case YOUWIN:
-                renderYouWin();
-                break;
-        }
+        renderer.render(
+                gameState,
+                selectedGameMode,
+                paddle,
+                bricks,
+                balls,
+                powerUps,
+                bullets,
+                score,
+                lives,
+                currentLevel,
+                canvas.getWidth(),
+                canvas.getHeight(),
+                scoresToDisplay,
+                highScoreTitle
+        );
     }
 
     private boolean isButtonClicked(double mouseX, double mouseY, double buttonY, double buttonWidth, double buttonHeight) {
@@ -629,154 +458,4 @@ public class GameCanvas extends Pane {
         return mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
                 mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
-
-    // Vẽ màn hình Menu
-    private void renderMenu() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.7));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(Color.CYAN);
-        gc.setFont(Font.font("Arial", 48));
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("ARKANOID", canvas.getWidth() / 2, canvas.getHeight() / 3);
-
-        double btn1Y = canvas.getHeight() / 2 - 40;
-        gc.setFill(Color.LIMEGREEN);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
-        gc.setFill(Color.BLACK);
-        gc.setFont(Font.font("Arial", 24));
-        gc.fillText("Chế độ Power-Up", canvas.getWidth() / 2, btn1Y + 30);
-
-        double btn2Y = canvas.getHeight() / 2 + 40;
-        gc.setFill(Color.ORANGERED);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
-        gc.setFill(Color.WHITE);
-        gc.fillText("Chế độ Tốc độ", canvas.getWidth() / 2, btn2Y + 30);
-
-        double btn3Y = canvas.getHeight() / 2 + 120;
-        gc.setFill(Color.GOLD);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
-        gc.setFill(Color.BLACK);
-        gc.fillText("Bảng Xếp Hạng", canvas.getWidth() / 2, btn3Y + 30);
-
-        double btn4Y = canvas.getHeight() / 2 + 200;
-        gc.setFill(Color.DARKGRAY);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn4Y, 280, 60, 20, 20);
-        gc.setFill(Color.WHITE);
-        gc.fillText("Thoát Game", canvas.getWidth() / 2, btn4Y + 30);
-    }
-    private void renderHighScores() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.7));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-
-        gc.setFill(Color.GOLD);
-        gc.setFont(Font.font("Arial", 48));
-        gc.fillText(highScoreTitle, canvas.getWidth() / 2, canvas.getHeight() / 4);
-
-        gc.setFont(Font.font("Arial", 30));
-        gc.setFill(Color.WHITE);
-
-        double startY = canvas.getHeight() / 2 - 80;
-
-        if (scoresToDisplay == null || scoresToDisplay.isEmpty()) {
-            gc.fillText("Chưa có điểm nào", canvas.getWidth() / 2, startY);
-        } else {
-            for (int i = 0; i < scoresToDisplay.size(); i++) {
-                gc.fillText((i + 1) + ".   " + scoresToDisplay.get(i), canvas.getWidth() / 2, startY + i * 40);
-            }
-        }
-        gc.setFont(Font.font("Arial", 20));
-        gc.fillText("Click để quay lại", canvas.getWidth() / 2, canvas.getHeight() - 100);
-    }
-    private void renderHighScoreSelection() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.7));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(Color.GOLD);
-        gc.setFont(Font.font("Arial", 48));
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("CHỌN BẢNG XẾP HẠNG", canvas.getWidth() / 2, canvas.getHeight() / 3);
-        gc.setFont(Font.font("Arial", 24));
-
-        double btn1Y = canvas.getHeight() / 2 - 40;
-        gc.setFill(Color.LIMEGREEN);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn1Y, 280, 60, 20, 20);
-        gc.setFill(Color.BLACK);
-        gc.fillText("BXH Power-Up", canvas.getWidth() / 2, btn1Y + 30);
-
-        double btn2Y = canvas.getHeight() / 2 + 40;
-        gc.setFill(Color.ORANGERED);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn2Y, 280, 60, 20, 20);
-        gc.setFill(Color.WHITE);
-        gc.fillText("BXH Tốc Độ", canvas.getWidth() / 2, btn2Y + 30);
-
-        double btn3Y = canvas.getHeight() / 2 + 120;
-        gc.setFill(Color.DARKGRAY);
-        gc.fillRoundRect(canvas.getWidth() / 2 - 140, btn3Y, 280, 60, 20, 20);
-        gc.setFill(Color.WHITE);
-        gc.fillText("Quay lại", canvas.getWidth() / 2, btn3Y + 30);
-    }
-    private void renderPauseScreen() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.5)); // 50% trong suốt
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", 60));
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("PAUSED", canvas.getWidth() / 2, canvas.getHeight() / 2);
-
-        gc.setFont(Font.font("Arial", 20));
-        gc.fillText("Nhấn 'P' để tiếp tục", canvas.getWidth() / 2, canvas.getHeight() / 2 + 50);
-    }
-
-    // Vẽ giao diện người chơi (Điểm, Mạng, Level)
-    private void renderUI() {
-        gc.setTextBaseline(VPos.TOP);
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", 24));
-
-        gc.setTextAlign(TextAlignment.LEFT);
-        gc.fillText("Điểm: " + score, 10, 30);
-
-        gc.setTextAlign(TextAlignment.RIGHT);
-        gc.fillText("Mạng: " + lives, canvas.getWidth() - 10, 30);
-
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("Level: " + currentLevel, canvas.getWidth() / 2, 30);
-    }
-
-    // Vẽ màn hình Game Over
-    private void renderGameOver() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.7));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(Color.WHITE);
-        gc.setFont(Font.font("Arial", 60));
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("GAME OVER", canvas.getWidth() / 2, canvas.getHeight() / 2 - 40);
-        gc.setFont(Font.font("Arial", 30));
-        gc.fillText("Điểm của bạn: " + score, canvas.getWidth() / 2, canvas.getHeight() / 2 + 20);
-        gc.setFont(Font.font("Arial", 20));
-        gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
-    }
-
-    // Vẽ màn hình Chiến thắng
-    private void renderYouWin() {
-        gc.setFill(Color.rgb(0, 0, 0, 0.7));
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(Color.YELLOW);
-        gc.setFont(Font.font("Arial", 60));
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.fillText("YOU WIN!", canvas.getWidth() / 2, canvas.getHeight() / 2 - 40);
-        gc.setFont(Font.font("Arial", 30));
-        gc.fillText("Điểm cuối cùng: " + score, canvas.getWidth() / 2, canvas.getHeight() / 2 + 20);
-        gc.setFont(Font.font("Arial", 20));
-        gc.fillText("Click để chơi lại", canvas.getWidth() / 2, canvas.getHeight() / 2 + 70);
-    }
 }
-
-
