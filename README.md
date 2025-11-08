@@ -15,7 +15,7 @@ Quản lý timeline, chuyển màn, level, hiệu ứng thắng/thua
 
 Xử lý âm thanh (GameMusic.getInstance()...) và luồng nhạc
 
-Liên quan đến: toàn bộ hệ thống game (class GameCanvas.java)
+Liên quan đến: toàn bộ hệ thống game, GameMusic(), LevelManager()
 
 2. Lê Quốc Triệu
 
