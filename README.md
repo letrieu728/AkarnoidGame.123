@@ -75,13 +75,16 @@ ArkanoidGame/
 │       ├── 📂 java/
 │       │   └── 📂 org/example/akarnoidgame/
 │       │       ├── 📄 Main.java
-│       │       ├── 📄 GameCanvas.java          # Trung tâm logic & render
+│       │       ├── 📄 GameCanvas.java          # Trung tâm 
 │       │       ├── 📄 GameMusic.java           # Quản lý âm thanh
 │       │       ├── 📄 GameObject.java          # Lớp cha cơ bản
 │       │       ├── 📄 MovableObject.java       # Lớp cha cho vật thể di chuyển
 │       │       ├── 📄 Ball.java                # Bóng
 │       │       ├── 📄 Paddle.java              # Thanh đỡ
 │       │       ├── 📄 Brick.java               # Gạch
+│       │       ├── 📄LevelManager.java         # Quản lý các màn chơi
+│       │       ├── 📄GameRenderer.java         # Vẽ
+│       │       ├── 📄 HighScoreManager.java    # Quản lý điểm
 │       │       ├── 📄 Bullet.java              # Đạn (khi có PowerUp)
 │       │       ├── 📄 PowerUp.java             # Lớp cha cho vật phẩm
 │       │       ├── 📄 X2BallPowerUp.java       # PowerUp: nhân đôi bóng
