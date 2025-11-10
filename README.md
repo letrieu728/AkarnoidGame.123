@@ -49,7 +49,7 @@ Lưu và đọc điểm cao: loadAllHighScores(), saveScoresToFile(), checkAndAd
 
 Giao diện chọn chế độ chơi và bảng xếp hạng
 
-Liên quan đến: HighScoreManager.java, file điểm highscore_powerup.txt, highscore_speedrun.txt
+Liên quan đến: GameRenderer.java, HighScoreManager.java, file điểm highscore_powerup.txt, highscore_speedrun.txt
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
 
