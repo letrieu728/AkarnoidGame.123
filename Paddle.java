@@ -40,26 +40,36 @@ public class Paddle extends MovableObject {
         }
         // Va chạm biên
         move();
-        if (x < 0) x = 0;
-        if (x + width > canvasWidth) x = canvasWidth - width;
+        if (x < 0) {
+            x = 0;
+        }
+        if (x + width > canvasWidth) {
+            x = canvasWidth - width;
+        }
     }
 
     @Override
     public void render(GraphicsContext gc) {
-        if (img != null)
+        if (img != null) {
             gc.drawImage(img, x, y, width, height);
-        else {
+        } else {
             gc.setFill(Color.DEEPSKYBLUE);
             gc.fillRect(x, y, width, height);
         }
     }
 
     public void handleKeyPress(KeyCode code) {
-        if (code == KeyCode.LEFT) dx = -speed;
-        else if (code == KeyCode.RIGHT) dx = speed;
+        if (code == KeyCode.LEFT) {
+            dx = -speed;
+        }
+        else if (code == KeyCode.RIGHT) {
+            dx = speed;
+        }
     }
 
     public void handleKeyRelease(KeyCode code) {
-        if (code == KeyCode.LEFT || code == KeyCode.RIGHT) dx = 0;
+        if (code == KeyCode.LEFT || code == KeyCode.RIGHT) {
+            dx = 0;
+        }
     }
 }

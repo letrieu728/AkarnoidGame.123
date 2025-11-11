@@ -42,7 +42,10 @@ public abstract class GameObject {
                 && y < other.y + other.height && y + height > other.y;
     }
 
-    // Getter & Setter
+    /**
+     * Getter & Setter
+     * @return x, y,...
+     */
     public double getX() { return x; }
     public double getY() { return y; }
     public void setX(double x) { this.x = x; }
