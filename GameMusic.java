@@ -25,8 +25,10 @@ public class GameMusic {
     private MediaPlayer buttonClickPlayer;
     private MediaPlayer powerUpPlayer;
 
+    /**
+     * Private constructor để ngăn việc tạo đối tượng từ bên ngoài.
+     */
     private GameMusic() {
-        // Private constructor để ngăn việc tạo đối tượng từ bên ngoài
         ensureJavaFXInitialized();
         initializeSounds();
     }
