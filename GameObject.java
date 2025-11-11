@@ -3,14 +3,16 @@ package org.example.akarnoidgame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-// Lớp cơ sở trừu tượng cho tất cả đối tượng trong game.
+/**
+ * Lớp cơ sở trừu tượng cho tất cả đối tượng trong game.
+ */
 public abstract class GameObject {
     protected double x, y, width, height;
     protected boolean visible = true;
     protected Image img;
 
     /**
-     * Khởi tạo một đối tượng game(GameObject)
+     * Khởi tạo một đối tượng game(GameObject).
      * @param x tọa độ X ban đầu của đối tượng
      * @param y tọa độ Y ban đầu của đối tượng
      * @param width chiều rộng của đối tượng
