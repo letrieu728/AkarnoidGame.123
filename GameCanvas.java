@@ -230,7 +230,9 @@ public class GameCanvas extends Pane {
         if (gameState == GameState.PAUSED) {
             return;
         }
-        if (gameState != GameState.PLAYING) return;
+        if (gameState != GameState.PLAYING) {
+            return;
+        }
 
         paddle.update();
 
@@ -255,7 +257,9 @@ public class GameCanvas extends Pane {
             if (!ball.isStuck() && ball.intersects(paddle)) {
                 GameMusic.getInstance().playPaddleHitSound();
                 double speed = Math.sqrt(ball.getDx() * ball.getDx() + ball.getDy() * ball.getDy());
-                if (speed == 0) speed = initialBallSpeed;
+                if (speed == 0) {
+                    speed = initialBallSpeed;
+                }
 
                 double paddleCenter = paddle.getX() + paddle.getWidth() / 2;
                 double ballCenter = ball.getX() + ball.getWidth() / 2;
