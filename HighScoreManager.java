@@ -18,8 +18,10 @@ public class HighScoreManager {
     private static final String SPEED_RUN_SCORE_FILE = "highscore_speedrun.txt";
     private static final int MAX_HIGH_SCORES = 5; // Chỉ lưu top 5
 
+    /**
+     * Tự động tải điểm khi khởi tạo.
+     */
     public HighScoreManager() {
-        // Tự động tải điểm khi khởi tạo
         loadAllHighScores();
     }
 
@@ -72,7 +74,10 @@ public class HighScoreManager {
         saveScoresToFile(targetFile, targetList);
     }
 
-    // Getters để GameCanvas có thể truy cập và hiển thị
+    /**
+     * Getters để GameCanvas có thể truy cập và hiển thị.
+     * @return powerUpHighScores, speedRunHighScores
+     */
     public List<Integer> getPowerUpHighScores() {
         return powerUpHighScores;
     }
