@@ -50,7 +50,9 @@ public class Ball extends MovableObject {
      */
     @Override
     public void update() {
-        if (isStuck) return;
+        if (isStuck) {
+            return;
+        }
         move();
         // Xử lý lỗi khi bóng kẹt tường
         if (x <= 0) {
@@ -76,9 +78,9 @@ public class Ball extends MovableObject {
      */
     @Override
     public void render(GraphicsContext gc) {
-        if (img != null)
+        if (img != null) {
             gc.drawImage(img, x, y, width, height);
-        else {
+        } else {
             gc.setFill(Color.RED);
             gc.fillOval(x, y, width, height);
         }
