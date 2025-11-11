@@ -29,10 +29,10 @@ public class GameCanvas extends Pane {
     private final List<Brick> bricks = new ArrayList<>();
     private final List<PowerUp> powerUps = new ArrayList<>();
     private final List<Bullet> bullets = new ArrayList<>();
+    private final Image background;
     private final GameRenderer renderer;
 
     private GameState gameState = GameState.MENU;
-    private Image background;
     private GameMode selectedGameMode;
     private int score = 0;
     private int lives = 5;
@@ -52,12 +52,7 @@ public class GameCanvas extends Pane {
         getChildren().add(canvas);
         scoreManager = new HighScoreManager();
         levelManager = new LevelManager();
-        try {
-            background = new Image(getClass().getResource("/image/background.png").toExternalForm());
-        } catch (NullPointerException e) {
-            System.err.println("LỖI: Không tìm thấy file background '/image/background.png'.");
-            background = null; // Gán là null để báo cho Renderer biết
-        }
+        background = new Image(getClass().getResource("/image/background.png").toExternalForm());
         paddle = new Paddle(width / 2 - 75, height - 60, 150, 25, width, "/image/paddle.png");
         renderer = new GameRenderer(gc, background);
         setupEventHandlers();
@@ -113,35 +108,35 @@ public class GameCanvas extends Pane {
         setOnMouseClicked(e -> {
             switch (gameState) {
                 case MENU:
-                    if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 60)) {
+                    if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.POWER_UP;
                         startGame(selectedGameMode, 1);
-                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         selectedGameMode = GameMode.SPEED_RUN;
                         startGame(selectedGameMode, 1);
-                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.HIGH_SCORE_SELECTION;
-                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 200, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         Platform.exit();
                     }
                     break;
                 case HIGH_SCORE_SELECTION:
 
-                    if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 60)) {
+                    if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 - 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         scoresToDisplay = scoreManager.getPowerUpHighScores();
                         highScoreTitle = "BXH (Power-Up)";
                         gameState = GameState.HIGH_SCORE;
-                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 40, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         scoresToDisplay = scoreManager.getSpeedRunHighScores();
                         highScoreTitle = "BXH (Tốc Độ)";
                         gameState = GameState.HIGH_SCORE;
-                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 60)) {
+                    } else if (isButtonClicked(e.getX(), e.getY(), canvas.getHeight() / 2 + 120, 280, 60)) {
                         GameMusic.getInstance().playButtonClickSound();
                         gameState = GameState.MENU;
                     }
@@ -158,7 +153,11 @@ public class GameCanvas extends Pane {
         });
     }
 
-    // Bắt đầu một màn chơi mới
+    /**
+     * Bắt đầu một màn chơi mới.
+     * @param mode mode
+     * @param level level
+     */
     private void startGame(GameMode mode, int level) {
         this.selectedGameMode = mode;
         this.gameState = GameState.PLAYING;
@@ -224,7 +223,9 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // --- LOGIC CẬP NHẬT GAME ---
+    /**
+     * Logic cập nhật game.
+     */
     private void update() {
         if (gameState == GameState.PAUSED) {
             return;
@@ -301,7 +302,7 @@ public class GameCanvas extends Pane {
             updatePowerUpsAndBullets();
         }
 
-        if (bricks.stream().noneMatch(brick -> brick.isVisible())) {
+        if (bricks.stream().noneMatch(brick -> !brick.isIndestructible() && brick.isVisible())) {
             GameMusic.getInstance().stopBackgroundMusic();
 
             if (currentLevel < 3) {
@@ -345,6 +346,8 @@ public class GameCanvas extends Pane {
             else ball.setX(brick.getX() - ball.getWidth());
         }
     }
+
+
     private void updatePowerUpsAndBullets() {
         Iterator<PowerUp> powerUpIterator = powerUps.iterator();
         while (powerUpIterator.hasNext()) {
@@ -436,7 +439,9 @@ public class GameCanvas extends Pane {
         }
     }
 
-    // --- CÁC HÀM VẼ (RENDER) ---
+    /**
+     * Các hàm vẽ - render.
+     */
     private void render() {
         renderer.render(
                 gameState,
@@ -456,9 +461,9 @@ public class GameCanvas extends Pane {
         );
     }
 
-    private boolean isButtonClicked(double mouseX, double mouseY, double buttonY, double buttonHeight) {
-        double buttonX = canvas.getWidth() / 2 - (double) 280 / 2;
-        return mouseX >= buttonX && mouseX <= buttonX + (double) 280 &&
+    private boolean isButtonClicked(double mouseX, double mouseY, double buttonY, double buttonWidth, double buttonHeight) {
+        double buttonX = canvas.getWidth() / 2 - buttonWidth / 2;
+        return mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
                 mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
     }
 }
