@@ -1,7 +1,9 @@
 package org.example.akarnoidgame;
 import javafx.scene.canvas.GraphicsContext;
-// Lớp trừu tượng cho tất cả các vật phẩm Power-up.
 
+/**
+ * Lớp trừu tượng cho tất cả các vật phẩm Power-up.
+ */
 public abstract class PowerUp extends MovableObject {
 
     public PowerUp(double x, double y, double size, String imagePath) {
