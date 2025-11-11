@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 public class Brick extends GameObject {
 
     private int hitPoints;
-    private final boolean indestructible;
     private final String type;
 
     /**
@@ -47,9 +46,6 @@ public class Brick extends GameObject {
      * @return true nếu gạch bị phá hủy sau va chạm và ngược lại
      */
     public boolean hit() {
-        if (indestructible) {
-            return false;
-        }
         hitPoints--;
         if (hitPoints <= 0) {
             visible = false;
@@ -75,7 +71,7 @@ public class Brick extends GameObject {
         } else {
             switch (type) {
                 case "brick1" -> gc.setFill(Color.YELLOW);
-                case "indestructible" -> gc.setFill(Color.DARKGRAY);
+                case "brick2" -> gc.setFill(Color.RED);
                 default -> gc.setFill(Color.ORANGE);
             }
             gc.fillRect(x, y, width, height);
@@ -84,9 +80,9 @@ public class Brick extends GameObject {
 
     @Override
     public void update() { /* Gạch không di chuyển */ }
-    public boolean isIndestructible() { return indestructible; }
     public int getHitPoints() { return hitPoints; }
     public String getType() { return type; }
 }
+
 
 
