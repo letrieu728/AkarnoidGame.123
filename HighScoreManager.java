@@ -16,7 +16,7 @@ public class HighScoreManager {
     private final List<Integer> speedRunHighScores = new ArrayList<>();
     private static final String POWER_UP_SCORE_FILE = "highscore_powerup.txt";
     private static final String SPEED_RUN_SCORE_FILE = "highscore_speedrun.txt";
-    private static final int MAX_HIGH_SCORES = 5; // Chỉ lưu top 5
+    private static final int MAX_HIGH_SCORES = 5;
 
     /**
      * Tự động tải điểm khi khởi tạo.
@@ -85,4 +85,5 @@ public class HighScoreManager {
     public List<Integer> getSpeedRunHighScores() {
         return speedRunHighScores;
     }
+
 }
