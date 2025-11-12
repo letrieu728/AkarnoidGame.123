@@ -19,7 +19,7 @@ Liên quan đến: toàn bộ hệ thống game, GameMusic(), LevelManager()
 
 2. Lê Quốc Triệu
 
-Vẽ UML
+Vẽ UML, viết README
 
 Cập nhật chuyển động và va chạm của Ball, Paddle, Brick, Bullet trong update()
 
