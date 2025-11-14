@@ -52,6 +52,7 @@ Giao diện chọn chế độ chơi và bảng xếp hạng
 Liên quan đến: GameRenderer.java, HighScoreManager.java, file điểm highscore_powerup.txt, highscore_speedrun.txt
 ## 🧠 Mục tiêu
 Xây dựng game Arkanoid (Đập gạch) bằng JavaFX với mô hình hướng đối tượng (OOP), thể hiện đóng gói, kế thừa và hiển thị đồ họa cơ bản.
+
 ---
 
 ## 👥 Tỷ lệ đóng góp của các thành viên
